@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>P7-riotjs-host</title>
+  <link rel="stylesheet" href="externals/jqb/styles.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!--
+	<startup config={url to config}></startup>
+	the logic here is that startup runs first to fetch all data
+	The app then starts with everything in place.
+-->
+  <startup  window = {window}
+            keep-alive="dist/config.json"
+            config="dist/config.json" 
+            next-tag="my-next-startup"></startup>
+  <my-next-startup config="next-config.json"></my-next-startup>
+<!--
+	The app gets mounted only after the startup logic has completed
+-->
+  <app></app>
+
+
+  <script src="externals/jqb/bundle.min.js"></script>
+  <script src="bundle.js"></script>
+</body>
+</html>
