@@ -4574,7 +4574,13 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
           if (window.boundAsync) {
             var result = { response: {} };
 
-            window.boundAsync.fetchLocal(input).then(function (data) {
+            var url = window.location.origin;
+            var frontPath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+
+            url += frontPath;
+            url += input;
+
+            window.boundAsync.fetchLocal(url).then(function (data) {
               result.json = JSON.parse(data);
               console.log(result.json);
               result.error = null;
@@ -7162,7 +7168,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var riot = __webpack_require__(0);
 
-riot.tag2('app', '<loading-indicator></loading-indicator> <header></header> <div class="container-fluid"> <div class="row"> <div class="col-sm-3 col-md-2 sidebar"> <div class="list-group table-of-contents"> <sidebar></sidebar> </div> </div> <div id="mainContent" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"> <div id="riot-app"></div> <div class="alert alert-dismissible alert-success" ref="success-alert" id="success-alert"> <button type="button" class="close" data-dismiss="alert">&times;</button> <strong>Success! </strong> A successful keep-alive has been issued. </div> </div> </div> </div>', '', '', function (opts) {
+riot.tag2('app', '<loading-indicator></loading-indicator> <header></header> <div class="container-fluid"> <div class="row"> <div class="col-sm-3 col-md-2 sidebar"> <div class="list-group table-of-contents"> <sidebar></sidebar> </div> </div> <div id="mainContent" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"> <div id="riot-app"></div> <div class="alert alert-dismissible alert-success" ref="success-alert" id="success-alert"> <button type="button" class="close" data-dismiss="alert">&times;</button> <strong>Success! </strong> A successful keep-alive has been issued. </div> </div> </div> <div> <table> <thead> <tr> <th>window.location</th> <th>value</th> </tr> </thead> <tbody> <tr> <td>origin</td> <td>{window.location.origin}</td> </tr> <tr> <td>href</td> <td>{window.location.href}</td> </tr> <tr> <td>protocol</td> <td>{window.location.protocol}</td> </tr> <tr> <td>host</td> <td>{window.location.host}</td> </tr> <tr> <td>port</td> <td>{window.location.port}</td> </tr> <tr> <td>pathname</td> <td>{window.location.pathname}</td> </tr> <tr> <td>search</td> <td>{window.location.search}</td> </tr> <tr> <td>hash</td> <td>{window.location.hash}</td> </tr> </tbody> </table> </div> </div>', '', '', function (opts) {
   var self = this;
   self.name = 'app';
   self.on('before-mount', function () {

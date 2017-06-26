@@ -33,11 +33,26 @@ namespace CefSharp.MinimalExample.WinForms
 
             public string FetchLocal(string url)
             {
-                if (string.IsNullOrEmpty(url))
+                if (BoundObject.SchemeName != null )
                 {
                     return null;
                 }
-                var filePath = Path.GetFullPath(Path.Combine(BoundObject.ResourceFolder, url));
+
+                var uri = new Uri(url);
+
+                if (BoundObject.HostName != null && !uri.Host.Equals(BoundObject.HostName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return null;
+                }
+
+                //Get the absolute path and remove the leading slash
+                var asbolutePath = uri.AbsolutePath.Substring(1);
+
+                if (string.IsNullOrEmpty(asbolutePath))
+                {
+                    return null;
+                }
+                var filePath = Path.GetFullPath(Path.Combine(BoundObject.ResourceFolder, asbolutePath));
                 //Check the file requested is within the specified path and that the file exists
                 if (filePath.StartsWith(BoundObject.ResourceFolder, StringComparison.OrdinalIgnoreCase) && File.Exists(filePath))
                 {
