@@ -5,7 +5,6 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
-using CefSharp.SchemeHandler;
 
 namespace CefSharp.MinimalExample.WinForms
 {
@@ -26,12 +25,12 @@ namespace CefSharp.MinimalExample.WinForms
             {
                 SchemeName = "localfolder",
                 DomainName = "cefsharp",
-                SchemeHandlerFactory = new CefSharpSchemeHandlerFactory(rootFolder: @"..\..\..\..\Resources",
+                SchemeHandlerFactory = new CefSharpSchemeHandlerFactory(rootFolder: @".\Resources",
                     hostName: "cefsharp", //Optional param no hostname/domain checking if null
                     defaultPage: "home.html") //Optional param will default to index.html
             });
 
-            BoundObject.ResourceFolder = Path.GetFullPath(@"..\..\..\..\Resources");
+            BoundObject.ResourceFolder = Path.GetFullPath(@".\Resources");
             BoundObject.SchemeRoot = "localfolder://cefsharp";
 
 

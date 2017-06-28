@@ -24,8 +24,9 @@ namespace CefSharp.MinimalExample.WinForms
             browser = new ChromiumWebBrowser("localfolder://cefsharp/dist/index.html")
             {
                 Dock = DockStyle.Fill,
+                DownloadHandler = new DownloadHandler(),
             };
-           
+            browser.RenderProcessMessageHandler = new RenderProcessMessageHandler();
             browser.RegisterAsyncJsObject("boundAsync", new BoundObject.AsyncBoundObject()); //Standard object rego
 
             toolStripContainer.ContentPanel.Controls.Add(browser);

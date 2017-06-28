@@ -70,6 +70,7 @@
     </Compile>
     <Compile Include="CefSharpSchemeHandlerFactory.cs" />
     <Compile Include="Controls\ControlExtensions.cs" />
+    <Compile Include="DownloadHandler.cs" />
     <Compile Include="Program.cs">
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -78,6 +79,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RenderProcessMessageHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BrowserForm.resx">
