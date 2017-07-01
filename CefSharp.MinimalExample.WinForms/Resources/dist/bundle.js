@@ -4596,10 +4596,10 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 
           console.log(Constants.WELLKNOWN_EVENTS.in.fetch, input, init, ack, jsonFixup);
 
-          // if (window.location.protocol === 'localfolder:' && !input.startsWith('http')) {
-          //  this._onLocalFetch(input, ack);
-          // return;
-          // }
+          if (window.location.protocol === 'localfolder:' && !input.startsWith('http')) {
+            this._onLocalFetch(input, ack);
+            return;
+          }
           riot.control.trigger(riot.EVT.fetchStore.out.inprogressStart);
           if (jsonFixup === true) {
             if (!antiforgery) {
