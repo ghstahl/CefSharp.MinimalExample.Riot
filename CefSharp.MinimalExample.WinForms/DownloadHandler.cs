@@ -1,9 +1,17 @@
 using System;
+using System.IO;
+using CEF.Custom;
+
 
 namespace CefSharp.MinimalExample.WinForms
 {
     public class DownloadHandler : IDownloadHandler
     {
+        public DownloadHandler()
+        {
+            DownloadRepository = new DownloadRepository();
+        }
+        private IDownloadRepository DownloadRepository { get; set; }
         public event EventHandler<DownloadItem> OnBeforeDownloadFired;
 
         public event EventHandler<DownloadItem> OnDownloadUpdatedFired;
@@ -20,7 +28,11 @@ namespace CefSharp.MinimalExample.WinForms
             {
                 using (callback)
                 {
-                    callback.Continue(downloadItem.SuggestedFileName, showDialog: false);
+                    var folder = CEF.Custom.DownloadRepository.GetHashString(downloadItem.Url);
+                    var finalFolder = DownloadRepository.EnsurePath(folder);
+                    var suggestedName = Path.Combine(finalFolder, downloadItem.SuggestedFileName);
+
+                    callback.Continue(suggestedName, showDialog: false);
                 }
             }
         }

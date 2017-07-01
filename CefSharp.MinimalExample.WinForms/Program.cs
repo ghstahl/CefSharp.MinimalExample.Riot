@@ -5,6 +5,7 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
+using CEF.Custom;
 
 namespace CefSharp.MinimalExample.WinForms
 {
@@ -21,6 +22,10 @@ namespace CefSharp.MinimalExample.WinForms
                 //By default CefSharp will use an in-memory cache, you need to specify a Cache Folder to persist data
                 CachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CefSharp\\Cache")
             };
+
+            DownloadRepository.GlobalRootFolder =
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    "CefSharp\\Download");
             settings.RegisterScheme(new CefCustomScheme
             {
                 SchemeName = "localfolder",
