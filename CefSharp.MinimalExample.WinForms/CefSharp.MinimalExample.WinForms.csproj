@@ -53,6 +53,10 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -70,6 +74,24 @@
       <DependentUpon>BrowserForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CefSharpSchemeHandlerFactory.cs" />
+    <Compile Include="Commands\ActionSelector.cs" />
+    <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\CommandAction.cs" />
+    <Compile Include="Commands\CommandActionExtensions.cs" />
+    <Compile Include="Commands\CommandActionNotFoundException.cs" />
+    <Compile Include="Commands\CommandAttribute.cs" />
+    <Compile Include="Commands\CommandActionAttribute.cs" />
+    <Compile Include="Commands\CommandFinder.cs" />
+    <Compile Include="Commands\CommandLineParameter.cs" />
+    <Compile Include="Commands\CommandLineParseResult.cs" />
+    <Compile Include="Commands\CommandParameterAttribute.cs" />
+    <Compile Include="Commands\CommandTypeWrapper.cs" />
+    <Compile Include="Commands\ICommandDependencyResolver.cs" />
+    <Compile Include="Commands\MatchSelector.cs" />
+    <Compile Include="Commands\ParameterInfoWrapper.cs" />
+    <Compile Include="Commands\PrototypeGenerator.cs" />
+    <Compile Include="Commands\ReflectionUtilities.cs" />
+    <Compile Include="Commands\StringExtensions.cs" />
     <Compile Include="Controls\ControlExtensions.cs" />
     <Compile Include="DownloadHandler.cs" />
     <Compile Include="Program.cs">

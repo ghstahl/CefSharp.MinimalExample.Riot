@@ -34,6 +34,15 @@ namespace CEF.Custom
 
         }
 
+        public List<DownloadRecord> Records
+        {
+            get
+            {
+                var dRecords = new BiggyList<DownloadRecord>(JsonStore);
+                return dRecords.ToList();
+            }
+        }
+
         public string InitDownload(DownloadRecord downloadRecord)
         {
             var dRecords = new BiggyList<DownloadRecord>(JsonStore);

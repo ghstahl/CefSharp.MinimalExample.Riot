@@ -18,6 +18,7 @@ namespace CEF.Custom
     {
         string RootFolder { get;  }
         string EnsurePath(string subPath);
+        List<DownloadRecord> Records { get; }
         string InitDownload(DownloadRecord dr);
         void UpdateDownload(string url, int percentComplete, bool isComplete);
     }
