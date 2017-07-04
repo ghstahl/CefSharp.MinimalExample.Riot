@@ -4569,8 +4569,8 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
           return _this;
         }
 
-        FetchStore.prototype._onLocalFetch = function _onLocalFetch(input, ack) {
-          console.log(Constants.WELLKNOWN_EVENTS.in.fetch, '_onLocalFetch', input, ack, window.boundAsync);
+        FetchStore.prototype._onLocalFolderFetch = function _onLocalFolderFetch(input, ack) {
+          console.log(Constants.WELLKNOWN_EVENTS.in.fetch, '_onLocalFolderFetch', input, ack, window.boundAsync);
           if (window.boundAsync) {
             var result = { response: {} };
 
@@ -4590,16 +4590,39 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
           }
         };
 
+        FetchStore.prototype._onLocalFetch = function _onLocalFetch(input, body, ack) {
+          console.log(Constants.WELLKNOWN_EVENTS.in.fetch, '_onLocalFetch', input, ack, window.boundAsync);
+          if (window.boundAsync) {
+            var result = { response: {} };
+
+            var bodyInput = JSON.stringify(body);
+
+            window.boundAsync.fetch(input, bodyInput).then(function (data) {
+              result.json = JSON.parse(data);
+              console.log(data, result.json);
+              result.error = null;
+              result.response.ok = true;
+              riot.control.trigger(ack.evt, result, ack);
+            });
+          }
+        };
+
         FetchStore.prototype._onFetch = function _onFetch(input, init, ack) {
           var antiforgery = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
           var jsonFixup = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
 
           console.log(Constants.WELLKNOWN_EVENTS.in.fetch, input, init, ack, jsonFixup);
 
-          if (window.location.protocol === 'localfolder:' && !input.startsWith('http')) {
-            this._onLocalFetch(input, ack);
+          if (input.startsWith('local://')) {
+            this._onLocalFetch(input, init, ack);
             return;
           }
+
+          if (window.location.protocol === 'localfolder:' && !input.startsWith('http')) {
+            this._onLocalFolderFetch(input, ack);
+            return;
+          }
+
           riot.control.trigger(riot.EVT.fetchStore.out.inprogressStart);
           if (jsonFixup === true) {
             if (!antiforgery) {
@@ -7322,7 +7345,8 @@ Constants.WELLKNOWN_EVENTS = {
   in: {
     fetchConfig: Constants.NAMESPACE + 'fetch-config',
     fetchConfigResult: Constants.NAMESPACE + 'fetch-config-result',
-    fetchConfigHeadResult: Constants.NAMESPACE + 'fetch-config-head-result'
+    fetchConfigHeadResult: Constants.NAMESPACE + 'fetch-config-head-result',
+    downloadRecordsResult: Constants.NAMESPACE + 'download-records-result'
   },
   out: {
     configComplete: Constants.NAMESPACE + 'config-complete'
@@ -7346,7 +7370,7 @@ var NextConfigStore = function (_StoreBase) {
     var _this = _possibleConstructorReturn(this, _StoreBase.call(this));
 
     riot.observable(_this);
-    _this.riotHandlers = [{ event: Constants.WELLKNOWN_EVENTS.in.fetchConfig, handler: _this._onFetchConfig }, { event: Constants.WELLKNOWN_EVENTS.in.fetchConfigResult, handler: _this._onFetchConfigResult }];
+    _this.riotHandlers = [{ event: Constants.WELLKNOWN_EVENTS.in.fetchConfig, handler: _this._onFetchConfig }, { event: Constants.WELLKNOWN_EVENTS.in.fetchConfigResult, handler: _this._onFetchConfigResult }, { event: Constants.WELLKNOWN_EVENTS.in.fetchConfigHeadResult, handler: _this._onFetchConfigHeadResult }, { event: Constants.WELLKNOWN_EVENTS.in.downloadRecordsResult, handler: _this._onDownloadRecordsResult }];
     _this.bindEvents();
     return _this;
   }
@@ -7361,6 +7385,21 @@ var NextConfigStore = function (_StoreBase) {
     };
 
     riot.control.trigger(riot.EVT.fetchStore.in.fetch, url, null, myAck);
+
+    var myAck2 = {
+      evt: riot.EVT.nextConfigStore.in.fetchConfigHeadResult
+    };
+
+    riot.control.trigger(riot.EVT.fetchStore.in.fetch, 'local://my-command/my-action', {
+      someString: 'Hello from riot',
+      someInt: 41
+    }, myAck2);
+
+    var myAck3 = {
+      evt: riot.EVT.nextConfigStore.in.downloadRecordsResult
+    };
+
+    riot.control.trigger(riot.EVT.fetchStore.in.fetch, 'local://download/records', null, myAck3);
   };
 
   NextConfigStore.prototype._onFetchConfigResult = function _onFetchConfigResult(result, ack) {
@@ -7372,6 +7411,14 @@ var NextConfigStore = function (_StoreBase) {
     } else {
       this.trigger(Constants.WELLKNOWN_EVENTS.out.configComplete);
     }
+  };
+
+  NextConfigStore.prototype._onFetchConfigHeadResult = function _onFetchConfigHeadResult(result, ack) {
+    console.log(Constants.NAME, riot.EVT.nextConfigStore.in.fetchConfigHeadResult, result, ack);
+  };
+
+  NextConfigStore.prototype._onDownloadRecordsResult = function _onDownloadRecordsResult(result, ack) {
+    console.log(Constants.NAME, riot.EVT.nextConfigStore.in.downloadRecordsResult, result, ack);
   };
 
   return NextConfigStore;

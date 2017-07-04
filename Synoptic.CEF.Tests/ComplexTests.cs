@@ -92,8 +92,8 @@ namespace Synoptic.CEF.Tests
                     ContractResolver = new CamelCasePropertyNamesContractResolver()
                 });
 
-            
-            var runResult = new CommandRunner().WithCommandFromType<CommandRunnerTestClass>().Run(new[]
+
+            var runResult = new CommandRunner().Run(new[]
             {
                 "command-runner-test-class",
                 "complex-param-to-hyphen-with-return",

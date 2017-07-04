@@ -1,9 +1,30 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using Synoptic;
 
 namespace CefSharp.MinimalExample.WinForms
 {
+    public class ComplexData
+    {
+        public string SomeString { get; set; }
+        public int SomeInt { get; set; }
+    }
+
+    [Command]
+    internal class MyCommand
+    {
+        [CommandAction]
+        public ComplexData MyAction([CommandParameter(FromBody = true)]ComplexData paramOne)
+        {
+            return new ComplexData()
+            {
+                SomeInt = 42,
+                SomeString = "Hello"
+            };
+        }
+    }
+
     public class BoundObject
     {
         public static string ResourceFolder { get; set; }
@@ -14,14 +35,14 @@ namespace CefSharp.MinimalExample.WinForms
         {
 
             //We expect an exception here, so tell VS to ignore
-      
+
             public void Error()
             {
                 throw new Exception("This is an exception coming from C#");
             }
 
             //We expect an exception here, so tell VS to ignore
-           
+
             public int Div(int divident, int divisor)
             {
                 return divident / divisor;
@@ -29,6 +50,31 @@ namespace CefSharp.MinimalExample.WinForms
 
             public void writeAsyncResult(string call, string end)
             {
+            }
+
+            public string Fetch(string url, string body)
+            {
+                var uri = new Uri(url);
+                var actionName = uri.AbsolutePath.Substring(1);
+                var commandName = uri.Host;
+
+                try
+                {
+                    var runResult = new CommandRunner().Run(new[]
+                    {
+                        commandName,
+                        actionName,
+                        string.Format(@"--param-one={0}",body)
+                    });
+                    return runResult.Json;
+
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
+
+                return null;
             }
 
             public string FetchLocal(string url)
@@ -46,13 +92,13 @@ namespace CefSharp.MinimalExample.WinForms
                 }
 
                 //Get the absolute path and remove the leading slash
-                var asbolutePath = uri.AbsolutePath.Substring(1);
+                var absolutePath = uri.AbsolutePath.Substring(1);
 
-                if (string.IsNullOrEmpty(asbolutePath))
+                if (string.IsNullOrEmpty(absolutePath))
                 {
                     return null;
                 }
-                var filePath = Path.GetFullPath(Path.Combine(BoundObject.ResourceFolder, asbolutePath));
+                var filePath = Path.GetFullPath(Path.Combine(BoundObject.ResourceFolder, absolutePath));
                 //Check the file requested is within the specified path and that the file exists
                 if (filePath.StartsWith(BoundObject.ResourceFolder, StringComparison.OrdinalIgnoreCase) && File.Exists(filePath))
                 {
