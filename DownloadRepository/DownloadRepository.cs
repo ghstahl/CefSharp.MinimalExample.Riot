@@ -47,23 +47,17 @@ namespace CEF.Custom
         {
             var dRecords = new BiggyList<DownloadRecord>(JsonStore);
             var dr = dRecords.FirstOrDefault(a => a.Url == downloadRecord.Url);
-            if (dr != null)
-            {
-                dr.IsComplete = downloadRecord.IsComplete;
-                dr.FileName = downloadRecord.FileName;
-                dr.Hash = downloadRecord.Hash;
-                dr.PercentComplete = downloadRecord.PercentComplete;
-                dr.Url = downloadRecord.Url;
-                dRecords.Update(dr);
-            }
-            else
+            if (dr == null)
             {
                 dRecords.Add(downloadRecord);
+                dr = downloadRecord;
             }
-            var finalFolder = EnsurePath(downloadRecord.Hash);
-            var fullPath = Path.Combine(finalFolder, downloadRecord.FileName);
+            
+            dr.Hash = GetHashString(downloadRecord.Url);
 
-            dr = dRecords.FirstOrDefault(a => a.Url == downloadRecord.Url);
+            var finalFolder = EnsurePath(dr.Hash);
+            var fullPath = Path.Combine(finalFolder, dr.FileName);
+
             dr.FullPath = fullPath;
 
             dRecords.Update(dr);

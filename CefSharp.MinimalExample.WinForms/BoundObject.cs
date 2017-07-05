@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using Newtonsoft.Json;
 using Synoptic;
 
 namespace CefSharp.MinimalExample.WinForms
@@ -10,7 +11,17 @@ namespace CefSharp.MinimalExample.WinForms
         public string SomeString { get; set; }
         public int SomeInt { get; set; }
     }
+    public class Status
+    {
+        public bool Ok { get; set; }
+        public Exception Exception { get; set; }
+    }
+    public class FetchResult
+    {
 
+        public Status Status { get; set; }
+        public string Data { get; set; }
+    }
     [Command]
     internal class MyCommand
     {
@@ -57,7 +68,12 @@ namespace CefSharp.MinimalExample.WinForms
                 var uri = new Uri(url);
                 var actionName = uri.AbsolutePath.Substring(1);
                 var commandName = uri.Host;
-
+                var fetchResult = new FetchResult()
+                {
+                    Status = new Status() {Ok = false},
+                    Data = "a4ac628a-b21e-43af-937a-6c447ff59954"
+                };
+                string json = "";
                 try
                 {
                     var runResult = new CommandRunner().Run(new[]
@@ -66,15 +82,17 @@ namespace CefSharp.MinimalExample.WinForms
                         actionName,
                         string.Format(@"--param-one={0}",body)
                     });
-                    return runResult.Json;
-
+                    fetchResult.Status.Ok = true;
+                    json = JsonConvert.SerializeObject(fetchResult);
+                    json = json.Replace("a4ac628a-b21e-43af-937a-6c447ff59954", runResult.Json);
                 }
                 catch (Exception e)
                 {
-                    return null;
+                    fetchResult.Status.Exception = e;
+                    json = JsonConvert.SerializeObject(fetchResult);
                 }
 
-                return null;
+                return json;
             }
 
             public string FetchLocal(string url)

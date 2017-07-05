@@ -1,34 +1,65 @@
 {
   "components": [{
-    "key": "typicode-component",
-    "jsBundle": {
-      "path": "externals/typicode_component/bundle.js"
-    },
-    "cssBundle": {
-      "path": "externals/typicode_component/styles.css"
-    },
+      "key": "typicode-component",
+      "jsBundle": {
+        "path": "externals/typicode_component/bundle.js"
+      },
+      "cssBundle": {
+        "path": "externals/typicode_component/styles.css"
+      },
 
-    "trigger": {
-      "onLoad": [{
-        "event": "sidebar-store:sidebar-add-item",
-        "data": {
-          "title": "My Components Page",
-          "route": "my-component-page/home"
-        }
-      }],
-      "onUnload": [{
+      "trigger": {
+        "onLoad": [{
+          "event": "sidebar-store:sidebar-add-item",
+          "data": {
+            "title": "My Components Page",
+            "route": "my-component-page/home"
+          }
+        }],
+        "onUnload": [{
           "event": "sidebar-store:sidebar-remove-item",
           "data": {
             "title": "My Components Page"
           }
-        } 
-      ]
+        }]
+      },
+      "routeLoad": {
+        "route": "/my-component-page.."
+      },
+      "state": {
+        "loaded": false
+      }
     },
-    "routeLoad": {
-      "route": "/my-component-page.."
-    },
-    "state": {
-      "loaded": false
+    {
+      "key": "download-manager",
+      "jsBundle": {
+        "path": "externals/download_manager/bundle.js"
+      },
+      "cssBundle": {
+        "path": "externals/download_manager/styles.css"
+      },
+
+      "trigger": {
+        "onLoad": [{
+          "event": "sidebar-store:sidebar-add-item",
+          "data": {
+            "title": "download-manager",
+            "route": "download-manager/home"
+          }
+        }],
+        "onUnload": [{
+          "event": "sidebar-store:sidebar-remove-item",
+          "data": {
+            "title": "download-manager"
+          }
+        }]
+      },
+      "routeLoad": {
+        "route": "/download-manager.."
+      },
+      "state": {
+        "loaded": false
+      }
     }
-  }]
+  ]
 }

@@ -38,7 +38,6 @@ namespace CefSharp.MinimalExample.WinForms
                     {
                         IsComplete = false,
                         FileName = downloadItem.SuggestedFileName,
-                        Hash = CEF.Custom.DownloadRepository.GetHashString(downloadItem.Url),
                         PercentComplete = 0,
                         Url = downloadItem.Url
                     };

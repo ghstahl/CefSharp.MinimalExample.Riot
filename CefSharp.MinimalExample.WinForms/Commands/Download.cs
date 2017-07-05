@@ -25,5 +25,10 @@ namespace CefSharp.MinimalExample.WinForms.Commands
             var result =  DownloadRepository.Records;
             return result;
         }
+        [CommandAction]
+        public void InitDownload([CommandParameter(FromBody = true)]DownloadRecord paramOne)
+        {
+            DownloadRepository.InitDownload(paramOne);
+        }
     }
 }
