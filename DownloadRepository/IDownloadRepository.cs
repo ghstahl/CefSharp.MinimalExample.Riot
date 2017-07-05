@@ -11,6 +11,7 @@ namespace CEF.Custom
         public string Url { get; set; }
         public string Hash { get; set; }
         public string FileName { get; set; }
+        public string FullPath { get; set; }
         public int PercentComplete { get; set; }
         public bool IsComplete { get; set; }
     }
@@ -19,7 +20,8 @@ namespace CEF.Custom
         string RootFolder { get;  }
         string EnsurePath(string subPath);
         List<DownloadRecord> Records { get; }
-        string InitDownload(DownloadRecord dr);
+        DownloadRecord InitDownload(DownloadRecord dr);
         void UpdateDownload(string url, int percentComplete, bool isComplete);
+        void Remove(string hash);
     }
 }

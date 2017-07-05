@@ -43,8 +43,8 @@ namespace CefSharp.MinimalExample.WinForms
                         Url = downloadItem.Url
                     };
 
-                    var suggestedPath = DownloadRepository.InitDownload(dr);
-                    callback.Continue(suggestedPath, showDialog: false);
+                    var fDr = DownloadRepository.InitDownload(dr);
+                    callback.Continue(fDr.FullPath, showDialog: false);
                 }
             }
         }

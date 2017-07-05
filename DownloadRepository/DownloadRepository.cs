@@ -43,7 +43,7 @@ namespace CEF.Custom
             }
         }
 
-        public string InitDownload(DownloadRecord downloadRecord)
+        public DownloadRecord InitDownload(DownloadRecord downloadRecord)
         {
             var dRecords = new BiggyList<DownloadRecord>(JsonStore);
             var dr = dRecords.FirstOrDefault(a => a.Url == downloadRecord.Url);
@@ -53,6 +53,7 @@ namespace CEF.Custom
                 dr.FileName = downloadRecord.FileName;
                 dr.Hash = downloadRecord.Hash;
                 dr.PercentComplete = downloadRecord.PercentComplete;
+                dr.Url = downloadRecord.Url;
                 dRecords.Update(dr);
             }
             else
@@ -60,9 +61,14 @@ namespace CEF.Custom
                 dRecords.Add(downloadRecord);
             }
             var finalFolder = EnsurePath(downloadRecord.Hash);
-            var suggestedName = Path.Combine(finalFolder, downloadRecord.FileName);
+            var fullPath = Path.Combine(finalFolder, downloadRecord.FileName);
 
-            return suggestedName;
+            dr = dRecords.FirstOrDefault(a => a.Url == downloadRecord.Url);
+            dr.FullPath = fullPath;
+
+            dRecords.Update(dr);
+
+            return dr;
         }
 
         public void UpdateDownload(string url, int percentComplete, bool isComplete)
@@ -81,6 +87,20 @@ namespace CEF.Custom
             dr.IsComplete = isComplete;
             dr.PercentComplete = percentComplete;
             dRecords.Update(dr);
+        }
+
+        public void Remove(string hash)
+        {
+            var dRecords = new BiggyList<DownloadRecord>(JsonStore);
+            var item = dRecords.FirstOrDefault(x => x.Hash == hash);
+            if (item != null)
+            {
+                var path = Path.Combine(RootFolder, item.Hash);
+                var suggestedName = Path.Combine(path, item.FileName);
+                File.Delete(suggestedName);
+                Directory.Delete(path);
+                dRecords.Remove(item);
+            }
         }
 
         public static byte[] GetHash(string inputString)
