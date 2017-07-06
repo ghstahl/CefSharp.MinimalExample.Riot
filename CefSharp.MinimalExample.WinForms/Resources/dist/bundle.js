@@ -4598,6 +4598,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
             var bodyInput = JSON.stringify(body);
 
             window.boundAsync.fetch(input, bodyInput).then(function (response) {
+              console.log(response);
               var jsonResponse = JSON.parse(response);
 
               result.json = jsonResponse.data;

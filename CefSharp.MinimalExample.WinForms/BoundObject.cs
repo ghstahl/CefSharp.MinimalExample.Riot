@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.IO;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using Synoptic;
 
 namespace CefSharp.MinimalExample.WinForms
@@ -20,7 +22,7 @@ namespace CefSharp.MinimalExample.WinForms
     {
 
         public Status Status { get; set; }
-        public string Data { get; set; }
+        public dynamic Data { get; set; }
     }
     [Command]
     internal class MyCommand
@@ -71,7 +73,7 @@ namespace CefSharp.MinimalExample.WinForms
                 var fetchResult = new FetchResult()
                 {
                     Status = new Status() {Ok = false},
-                    Data = "a4ac628a-b21e-43af-937a-6c447ff59954"
+                    Data = null
                 };
                 string json = "";
                 try
@@ -80,17 +82,20 @@ namespace CefSharp.MinimalExample.WinForms
                     {
                         commandName,
                         actionName,
-                        string.Format(@"--param-one={0}",body)
+                        string.Format(@"--param-one={0}", body)
                     });
                     fetchResult.Status.Ok = true;
-                    json = JsonConvert.SerializeObject(fetchResult);
-                    json = json.Replace("a4ac628a-b21e-43af-937a-6c447ff59954", runResult.Json);
+                    fetchResult.Data = JObject.Parse(runResult.Json);
                 }
                 catch (Exception e)
                 {
                     fetchResult.Status.Exception = e;
-                    json = JsonConvert.SerializeObject(fetchResult);
                 }
+                json = JsonConvert.SerializeObject(fetchResult,
+                    new JsonSerializerSettings
+                    {
+                        ContractResolver = new CamelCasePropertyNamesContractResolver()
+                    });
 
                 return json;
             }
