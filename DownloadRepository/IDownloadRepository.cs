@@ -6,6 +6,18 @@ using System.Threading.Tasks;
 
 namespace CEF.Custom
 {
+    public interface IDownloadEventSink
+    {
+       void OnUpdate();
+    }
+
+    public interface IDownloadEventSource
+    {
+        void RegisterSink(IDownloadEventSink sink);
+        void UnregisterSink(IDownloadEventSink sink);
+        void FireOnUpdate();
+    }
+
     public class DownloadRecord
     {
         public string Url { get; set; }
@@ -15,7 +27,7 @@ namespace CEF.Custom
         public int PercentComplete { get; set; }
         public bool IsComplete { get; set; }
     }
-    public interface IDownloadRepository
+    public interface IDownloadRepository: IDownloadEventSource
     {
         string RootFolder { get;  }
         string EnsurePath(string subPath);

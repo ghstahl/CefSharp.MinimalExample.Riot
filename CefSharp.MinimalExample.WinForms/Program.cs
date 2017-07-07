@@ -9,6 +9,14 @@ using CEF.Custom;
 
 namespace CefSharp.MinimalExample.WinForms
 {
+    class MyDownloadEventSink : IDownloadEventSink
+    {
+        public void OnUpdate()
+        {
+            const string script = "if(windows.bridgeEvent){ windows.bridgeEvent('hi'); }";
+            Global.Browser.MainFrame.ExecuteJavaScriptAsync(script);  
+        }
+    }
     public class Program
     {
         [STAThread]
@@ -41,8 +49,10 @@ namespace CefSharp.MinimalExample.WinForms
 
             //Perform dependency check to make sure all relevant resources are in our output directory.
             Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
-
+            Global.DownloadRepository = new DownloadRepository();
             var browser = new BrowserForm();
+            Global.DownloadRepository.RegisterSink(new MyDownloadEventSink());
+
             Application.Run(browser);
         }
     }

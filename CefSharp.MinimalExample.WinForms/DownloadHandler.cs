@@ -11,9 +11,9 @@ namespace CefSharp.MinimalExample.WinForms
     {
         public DownloadHandler()
         {
-            DownloadRepository = new DownloadRepository();
+           
         }
-        private IDownloadRepository DownloadRepository { get; set; }
+
         public event EventHandler<DownloadItem> OnBeforeDownloadFired;
 
         public event EventHandler<DownloadItem> OnDownloadUpdatedFired;
@@ -42,7 +42,7 @@ namespace CefSharp.MinimalExample.WinForms
                         Url = downloadItem.Url
                     };
 
-                    var fDr = DownloadRepository.InitDownload(dr);
+                    var fDr = Global.DownloadRepository.InitDownload(dr);
                     callback.Continue(fDr.FullPath, showDialog: false);
                 }
             }
@@ -50,7 +50,7 @@ namespace CefSharp.MinimalExample.WinForms
 
         public void OnDownloadUpdated(IBrowser browser, DownloadItem downloadItem, IDownloadItemCallback callback)
         {
-            DownloadRepository.UpdateDownload(downloadItem.Url,downloadItem.PercentComplete,downloadItem.IsComplete);
+            Global.DownloadRepository.UpdateDownload(downloadItem.Url,downloadItem.PercentComplete,downloadItem.IsComplete);
             var handler = OnDownloadUpdatedFired;
             if (handler != null)
             {

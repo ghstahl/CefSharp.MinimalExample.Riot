@@ -77,6 +77,7 @@
     <Compile Include="Commands\Download.cs" />
     <Compile Include="Controls\ControlExtensions.cs" />
     <Compile Include="DownloadHandler.cs" />
+    <Compile Include="Global.cs" />
     <Compile Include="Program.cs">
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

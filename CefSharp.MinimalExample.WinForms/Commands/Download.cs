@@ -33,24 +33,19 @@ namespace CefSharp.MinimalExample.WinForms.Commands
     internal class Download
     {
 
-        private IDownloadRepository _downloadRepository;
 
-        private IDownloadRepository DownloadRepository
-        {
-            get { return _downloadRepository ?? (_downloadRepository = new DownloadRepository()); }
-        }
 
         [CommandAction]
         public dynamic Records()
         {
-            var result =  DownloadRepository.Records;
+            var result =  Global.DownloadRepository.Records;
             var dynamic = new RecordContainer {Records = result}.ToDynamic();
             return dynamic;
         }
         [CommandAction]
         public void InitDownload([CommandParameter(FromBody = true)]DownloadRecord paramOne)
         {
-            DownloadRepository.InitDownload(paramOne);
+            Global.DownloadRepository.InitDownload(paramOne);
         }
     }
 }

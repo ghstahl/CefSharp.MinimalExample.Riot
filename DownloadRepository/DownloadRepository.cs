@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,12 +11,29 @@ using Biggy.Data.Json;
 
 namespace CEF.Custom
 {
-
-
-
+   
 
     public class DownloadRepository : IDownloadRepository
     {
+
+        private List<IDownloadEventSink> _sinks { get; set; }
+        public  void RegisterSink(IDownloadEventSink sink)
+        {
+            var query = from s in _sinks
+                where s == sink
+                select s;
+            if (!query.Any())
+            {
+                _sinks.Add(sink);
+            }
+        }
+        public void UnregisterSink(IDownloadEventSink sink)
+        {
+            var query = from s in _sinks
+                        where s != sink
+                        select s;
+            _sinks = query.ToList();
+        }
         private JsonStore<DownloadRecord> JsonStore { get; set; }
 
         public static string GlobalRootFolder { get; set; }
@@ -25,6 +43,7 @@ namespace CEF.Custom
         {
             var dbPath = EnsurePath(".DB");
             JsonStore = new JsonStore<DownloadRecord>(dbPath);
+            _sinks = new List<IDownloadEventSink>();
         }
         public string EnsurePath(string subPath)
         {
@@ -112,6 +131,12 @@ namespace CEF.Custom
             return sb.ToString();
         }
 
-
+        public void FireOnUpdate()
+        {
+            foreach (var sink in _sinks)
+            {
+                sink.OnUpdate();
+            }
+        }
     }
 }
