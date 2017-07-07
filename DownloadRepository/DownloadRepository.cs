@@ -76,6 +76,11 @@ namespace CEF.Custom
                     dRecords.Add(downloadRecord);
                     dr = downloadRecord;
                 }
+                else
+                {
+                    dr.IsCancelled = downloadRecord.IsCancelled;
+                    
+                }
 
                 dr.Hash = GetHashString(downloadRecord.Url);
 
@@ -113,12 +118,12 @@ namespace CEF.Custom
             }
         }
 
-        public void Remove(string hash)
+        public void Remove(string url)
         {
             lock (JsonStore)
             {
                 var dRecords = new BiggyList<DownloadRecord>(JsonStore);
-                var item = dRecords.FirstOrDefault(x => x.Hash == hash);
+                var item = dRecords.FirstOrDefault(x => x.Url == url);
                 if (item != null)
                 {
                     var path = Path.Combine(RootFolder, item.Hash);
@@ -129,7 +134,19 @@ namespace CEF.Custom
                 }
             }
         }
-
+        public void Cancel(string url)
+        {
+            lock (JsonStore)
+            {
+                var dRecords = new BiggyList<DownloadRecord>(JsonStore);
+                var item = dRecords.FirstOrDefault(x => x.Url == url);
+                if (item != null)
+                {
+                    item.IsCancelled = true;
+                    dRecords.Update(item);
+                }
+            }
+        }
         public static byte[] GetHash(string inputString)
         {
             HashAlgorithm algorithm = MD5.Create();  //or use SHA256.Create();
@@ -150,6 +167,16 @@ namespace CEF.Custom
             foreach (var sink in _sinks)
             {
                 sink.OnUpdate();
+            }
+        }
+
+        public DownloadRecord GetDownloadRecord(string url)
+        {
+            lock (JsonStore)
+            {
+                var dRecords = new BiggyList<DownloadRecord>(JsonStore);
+                var item = dRecords.FirstOrDefault(x => x.Url == url);
+                return item;
             }
         }
     }
