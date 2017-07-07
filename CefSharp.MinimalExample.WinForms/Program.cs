@@ -14,7 +14,7 @@ namespace CefSharp.MinimalExample.WinForms
         public void OnUpdate()
         {
             const string script = "if(windows.bridgeEvent){ windows.bridgeEvent('hi'); }";
-            Global.Browser.MainFrame.ExecuteJavaScriptAsync(script);  
+            Global.WebBrowser.GetBrowser().MainFrame.ExecuteJavaScriptAsync(script);
         }
     }
     public class Program
@@ -45,7 +45,7 @@ namespace CefSharp.MinimalExample.WinForms
 
             BoundObject.ResourceFolder = Path.GetFullPath(@".\Resources");
             BoundObject.SchemeRoot = "localfolder://cefsharp";
-          
+
 
             //Perform dependency check to make sure all relevant resources are in our output directory.
             Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);

@@ -38,6 +38,8 @@ namespace CefSharp.MinimalExample.WinForms
         }
     }
 
+
+
     public class BoundObject
     {
         public static string ResourceFolder { get; set; }
@@ -46,8 +48,11 @@ namespace CefSharp.MinimalExample.WinForms
         public static string HostName { get; set; }
         public class AsyncBoundObject
         {
+            public AsyncBoundObject()
+            {
 
-            //We expect an exception here, so tell VS to ignore
+            }
+
 
             public void Error()
             {
@@ -85,7 +90,10 @@ namespace CefSharp.MinimalExample.WinForms
                         string.Format(@"--param-one={0}", body)
                     });
                     fetchResult.Status.Ok = true;
-                    fetchResult.Data = JObject.Parse(runResult.Json);
+                    if (runResult.Json != null)
+                    {
+                        fetchResult.Data = JObject.Parse(runResult.Json);
+                    }
                 }
                 catch (Exception e)
                 {

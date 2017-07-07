@@ -75,6 +75,7 @@
     </Compile>
     <Compile Include="CefSharpSchemeHandlerFactory.cs" />
     <Compile Include="Commands\Download.cs" />
+    <Compile Include="Commands\DynamicExtensions.cs" />
     <Compile Include="Controls\ControlExtensions.cs" />
     <Compile Include="DownloadHandler.cs" />
     <Compile Include="Global.cs" />
