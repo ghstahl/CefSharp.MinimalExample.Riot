@@ -4,4 +4,17 @@
 }, {
 	"Url": "https://raw.githubusercontent.com/ghstahl/CefSharp.MinimalExample.Riot/master/CefSharp.MinimalExample.WinForms/Resources/NSPremiumDownloader.exe",
 	"FileName": "NSPremiumDownloader.exe"
-}]
+}, {
+	"Url": "http://ipv4.download.thinkbroadband.com/200MB.zip",
+	"FileName": "200MB.zip"
+}, {
+	"Url": "http://ipv4.download.thinkbroadband.com/1GB.zip",
+	"FileName": "1GB.zip"
+}, {
+	"Url": "http://ipv4.download.thinkbroadband.com/512MB.zip",
+	"FileName": "512MB.zip"
+}
+
+]
+
+

@@ -44,6 +44,7 @@ namespace CEF.Custom
         void Remove(string url);
         void Cancel(string url);
         LaunchResult LaunchExecutable(string url);
+        void PurgeIncompletes();
 
     }
 }

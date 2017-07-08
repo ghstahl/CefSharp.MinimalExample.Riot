@@ -13,7 +13,7 @@ using CefSharp;
 
 namespace CEF.Custom
 {
-   
+
 
     public class DownloadRepository : IDownloadRepository
     {
@@ -75,13 +75,17 @@ namespace CEF.Custom
                 var dr = dRecords.FirstOrDefault(a => a.Url == downloadRecord.Url);
                 if (dr == null)
                 {
+                    if (downloadRecord.DownloadItem == null)
+                    {
+                        downloadRecord.DownloadItem = new DownloadItem() {IsComplete = false};
+                    }
                     dRecords.Add(downloadRecord);
                     dr = downloadRecord;
                 }
                 else
                 {
                     dr.IsCancelled = downloadRecord.IsCancelled;
-                    
+
                 }
 
                 dr.Hash = GetHashString(downloadRecord.Url);
@@ -175,6 +179,31 @@ namespace CEF.Custom
                     Message = "Doesn't exist"
                 };
 
+            }
+        }
+
+        public void PurgeIncompletes()
+        {
+            lock (JsonStore)
+            {
+                var updateList = new List<DownloadRecord>();
+                var dRecords = new BiggyList<DownloadRecord>(JsonStore);
+                foreach (var item in dRecords)
+                {
+                    if (item.DownloadItem.IsComplete)
+                        continue;
+                    if (item.DownloadItem.IsInProgress)
+                    {
+                        File.Delete(item.DownloadItem.FullPath);
+
+                        item.DownloadItem = new DownloadItem() {IsComplete = false};
+                        updateList.Add(item);;
+                    }
+                }
+                foreach (var item in updateList)
+                {
+                    dRecords.Update(item);
+                }
             }
         }
 

@@ -11,7 +11,7 @@ namespace CefSharp.MinimalExample.WinForms
     {
         public DownloadHandler()
         {
-
+            
         }
 
         public event EventHandler<DownloadItem> OnBeforeDownloadFired;

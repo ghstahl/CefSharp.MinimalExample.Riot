@@ -50,6 +50,7 @@ namespace CefSharp.MinimalExample.WinForms
             //Perform dependency check to make sure all relevant resources are in our output directory.
             Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
             Global.DownloadRepository = new DownloadRepository();
+            Global.DownloadRepository.PurgeIncompletes();
             var browser = new BrowserForm();
             Global.DownloadRepository.RegisterSink(new MyDownloadEventSink());
 

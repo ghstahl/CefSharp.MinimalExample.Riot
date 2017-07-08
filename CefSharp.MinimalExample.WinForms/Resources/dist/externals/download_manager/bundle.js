@@ -179,11 +179,13 @@ Constants.WELLKNOWN_EVENTS = {
   in: {
     downloadManagerFetchResult: 'download-manager-fetch-result',
     downloadManagerFetch: 'download-manager-fetch',
-    typicodeUserFetch: 'download-manager-fetch'
+    downloadManagerLocalFetchResult: 'download-manager-local-fetch-result',
+    downloadManagerLocalFetch: 'download-manager-local-fetch'
   },
   out: {
-    downloadManagerChanged: 'download-managers-changed',
-    typicodeUserChanged: 'download-manager-changed'
+    downloadManagerChanged: 'download-manager-changed',
+    downloadManagerLocalChanged: 'download-manager-local-changed'
+
   }
 };
 window.P7HostCore.DeepFreeze.freeze(Constants);
@@ -200,7 +202,8 @@ var DownloadManagerStore = function (_window$P7HostCore$St) {
     _this.name = 'TypicodeUserStore';
     riot.EVT.downloadManagerStore = Constants.WELLKNOWN_EVENTS;
     _this.fetchException = null;
-    _this.riotHandlers = [{ event: Constants.WELLKNOWN_EVENTS.in.downloadManagerFetch, handler: _this._onDownloadManagerFetch }, { event: Constants.WELLKNOWN_EVENTS.in.downloadManagerFetchResult, handler: _this._onDownloadManagerFetchResult }];
+    _this.riotHandlers = [{ event: Constants.WELLKNOWN_EVENTS.in.downloadManagerFetch, handler: _this._onDownloadManagerFetch }, { event: Constants.WELLKNOWN_EVENTS.in.downloadManagerFetchResult, handler: _this._onDownloadManagerFetchResult }, { event: Constants.WELLKNOWN_EVENTS.in.downloadManagerLocalFetch, handler: _this._onDownloadManagerLocalFetch }, { event: Constants.WELLKNOWN_EVENTS.in.downloadManagerLocalFetchResult,
+      handler: _this._onDownloadManagerLocalFetchResult }];
     _this.bindEvents();
 
     riot.state.downloadManagerState = {};
@@ -237,8 +240,34 @@ var DownloadManagerStore = function (_window$P7HostCore$St) {
 
       this.trigger(Constants.WELLKNOWN_EVENTS.out.downloadManagerChanged);
     } else {
-      this.state.data = [];
+      this.state.data = undefined;
     }
+  };
+
+  DownloadManagerStore.prototype._onDownloadManagerLocalFetch = function _onDownloadManagerLocalFetch() {
+    console.log(Constants.WELLKNOWN_EVENTS.in.downloadManagerLocalFetch);
+    var url = 'local://download/records';
+    var myAck = {
+      evt: Constants.WELLKNOWN_EVENTS.in.downloadManagerLocalFetchResult
+    };
+
+    riot.control.trigger(riot.EVT.fetchStore.in.fetch, url, null, myAck);
+  };
+
+  DownloadManagerStore.prototype._onDownloadManagerLocalFetchResult = function _onDownloadManagerLocalFetchResult(result, ack) {
+    console.log(Constants.WELLKNOWN_EVENTS.in.downloadManagerLocalFetchResult, result, ack);
+    var test = JSON.stringify(result);
+
+    console.log(test);
+    if (result.error == null && result.response.ok && result.json) {
+      // good
+      var data = result.json;
+
+      this.state.localData = data;
+    } else {
+      this.state.localData = undefined;
+    }
+    this.trigger(Constants.WELLKNOWN_EVENTS.out.downloadManagerLocalChanged);
   };
 
   DownloadManagerStore.prototype._onTypicodeUserFetch = function _onTypicodeUserFetch(query) {
@@ -344,7 +373,9 @@ riot.control.trigger('plugin-registration', registerRecord);
 
 
 var riot = __webpack_require__(0);
-riot.tag2('download-manager-home', '<div class="panel panel-default"> <div class="panel-heading">Download Manager</div> <div class="panel-body"> <div class="well"> This pulls download from /download-manager.json </div> <table if="{state.data}" class="table table-striped table-hover "> <thead> <tr> <th>File</th> <th>link</th> </tr> </thead> <tbody> <tr each="{state.data}"> <td>{this.FileName}</td> <td> <a href="{this.Url}" download="{this.FileName}">Download</a></td> </tr> </tbody> </table> </div> </div>', '', '', function (opts) {
+riot.tag2('download-manager-home', '<div class="panel panel-default"> <div class="panel-heading">Download Manager</div> <div class="panel-body"> <div class="well"> This pulls download from /download-manager.json </div> <table if="{state.localData}" class="table table-striped table-hover "> <thead> <tr> <th>File</th> <th>Complete</th> <th>percentComplete</th> <th>link</th> </tr> </thead> <tbody> <tr each="{state.localData.records}"> <td>{this.fileName}</td> <td>{this.downloadItem.isComplete}</td> <td>{this.downloadItem.percentComplete}</td> <td if="{!this.downloadItem.isComplete && !this.downloadItem.isInProgress}"> <a href="{this.url}" download="{this.fileName}">Download</a></td> </td> <td if="{!this.downloadItem.isComplete && this.downloadItem.isInProgress}"> Cancel </td> <td if="{this.downloadItem.isComplete}"> Ready for install </td> </tr> </tbody> </table> </div> </div>', '', '', function (opts) {
+  var _this = this;
+
   var self = this;
   self.error = false;
   self.state = riot.state.downloadManagerState;
@@ -355,19 +386,28 @@ riot.tag2('download-manager-home', '<div class="panel panel-default"> <div class
     self.error = false;
   };
 
+  self.tick = function () {
+    riot.control.trigger(riot.EVT.downloadManagerStore.in.downloadManagerLocalFetch);
+  };
+
   self.on('mount', function () {
     console.log('typicode-users mount');
-    riot.control.on(riot.EVT.downloadManagerStore.out.downloadManagerChanged, self.onDownloadManagerChanged);
+    riot.control.on(riot.EVT.downloadManagerStore.out.downloadManagerLocalChanged, self.onDownloadManagerLocalChanged);
     riot.control.trigger(riot.EVT.downloadManagerStore.in.downloadManagerFetch);
+    self.tick();
+    self.timer = setInterval(_this.tick, 2000);
   });
   self.on('unmount', function () {
     console.log('typicode-users unmount');
-    riot.control.off(riot.EVT.downloadManagerStore.out.downloadManagerChanged, self.onDownloadManagerChanged);
+    clearInterval(self.timer);
+    riot.control.off(riot.EVT.downloadManagerStore.out.downloadManagerLocalChanged, self.onDownloadManagerLocalChanged);
   });
-  self.onDownloadManagerChanged = function (result) {
-    console.log(riot.EVT.downloadManagerStore.out.downloadManagerChanged);
+
+  self.onDownloadManagerLocalChanged = function (result) {
+    console.log(riot.EVT.downloadManagerStore.out.downloadManagerLocalChanged);
     self.update();
   };
+
   self.route = function (evt) {
     riot.control.trigger('riot-route-dispatch', 'my-component-page/typicode-user-detail?id=' + evt.item.id);
   };
