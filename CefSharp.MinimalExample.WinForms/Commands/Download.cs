@@ -42,5 +42,10 @@ namespace CefSharp.MinimalExample.WinForms.Commands
         {
             Global.DownloadRepository.Remove(paramOne.Url);
         }
+        [CommandAction]
+        public LaunchResult LaunchExecutable(string url)
+        {
+            return Global.DownloadRepository.LaunchExecutable(url);
+        }
     }
 }

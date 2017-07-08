@@ -19,6 +19,11 @@ namespace CEF.Custom
         void FireOnUpdate();
     }
 
+    public class LaunchResult
+    {
+        public bool Ok { get; set; }
+        public string Message { get; set; }
+    }
     public class DownloadRecord
     {
         public DownloadItem DownloadItem { get; set; }
@@ -26,8 +31,6 @@ namespace CEF.Custom
         public string Hash { get; set; }
         public string FileName { get; set; }
         public string FullPath { get; set; }
-        public int PercentComplete { get; set; }
-        public bool IsComplete { get; set; }
         public bool IsCancelled { get; set; }
     }
     public interface IDownloadRepository: IDownloadEventSource
@@ -37,9 +40,10 @@ namespace CEF.Custom
         List<DownloadRecord> Records { get; }
         DownloadRecord GetDownloadRecord(string url);
         DownloadRecord InitDownload(DownloadRecord dr);
-        void UpdateDownload(string url, int percentComplete, bool isComplete);
+        void UpdateDownload(string url, DownloadItem downloadItem);
         void Remove(string url);
         void Cancel(string url);
-        
+        LaunchResult LaunchExecutable(string url);
+
     }
 }

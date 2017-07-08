@@ -11,7 +11,7 @@ namespace CefSharp.MinimalExample.WinForms
     {
         public DownloadHandler()
         {
-           
+
         }
 
         public event EventHandler<DownloadItem> OnBeforeDownloadFired;
@@ -36,14 +36,15 @@ namespace CefSharp.MinimalExample.WinForms
                     NameValueCollection qscoll = HttpUtility.ParseQueryString(originalUri.Query);
                     var dr = new DownloadRecord()
                     {
-                        IsComplete = false,
+
                         FileName = downloadItem.SuggestedFileName,
-                        PercentComplete = 0,
+
                         Url = downloadItem.Url,
                         IsCancelled = false
                     };
 
                     var fDr = Global.DownloadRepository.InitDownload(dr);
+                    Global.DownloadRepository.UpdateDownload(downloadItem.Url, downloadItem);
                     callback.Continue(fDr.FullPath, showDialog: false);
                 }
             }
@@ -51,11 +52,11 @@ namespace CefSharp.MinimalExample.WinForms
 
         public void OnDownloadUpdated(IBrowser browser, DownloadItem downloadItem, IDownloadItemCallback callback)
         {
-            Global.DownloadRepository.UpdateDownload(downloadItem.Url,downloadItem.PercentComplete,downloadItem.IsComplete);
+            Global.DownloadRepository.UpdateDownload(downloadItem.Url, downloadItem);
             var dr = Global.DownloadRepository.GetDownloadRecord(downloadItem.Url);
 
 
-            if (dr.PercentComplete != 100 && dr.IsCancelled && downloadItem.IsInProgress)
+            if (downloadItem.PercentComplete != 100 && dr.IsCancelled && downloadItem.IsInProgress)
             {
                 callback.Cancel();
             }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Biggy.Core;
 using Biggy.Data.Json;
+using CefSharp;
 
 namespace CEF.Custom
 {
@@ -96,7 +98,7 @@ namespace CEF.Custom
             }
         }
 
-        public void UpdateDownload(string url, int percentComplete, bool isComplete)
+        public void UpdateDownload(string url, DownloadItem downloadItem)
         {
             lock (JsonStore)
             {
@@ -112,8 +114,7 @@ namespace CEF.Custom
                     return;
 
                 }
-                dr.IsComplete = isComplete;
-                dr.PercentComplete = percentComplete;
+                dr.DownloadItem = downloadItem;
                 dRecords.Update(dr);
             }
         }
@@ -147,6 +148,36 @@ namespace CEF.Custom
                 }
             }
         }
+
+        public LaunchResult LaunchExecutable(string url)
+        {
+            lock (JsonStore)
+            {
+                var dr = GetDownloadRecord(url);
+                if (dr != null && dr.DownloadItem.IsComplete)
+                {
+                    Process process = new Process
+                    {
+                        StartInfo =
+                        {
+                            FileName = dr.DownloadItem.FullPath
+                        }
+                    };
+                    var runResult = process.Start();
+                    return new LaunchResult()
+                    {
+                        Ok = runResult
+                    };
+                }
+                return new LaunchResult()
+                {
+                    Ok = false,
+                    Message = "Doesn't exist"
+                };
+
+            }
+        }
+
         public static byte[] GetHash(string inputString)
         {
             HashAlgorithm algorithm = MD5.Create();  //or use SHA256.Create();
