@@ -138,11 +138,7 @@ namespace CefSharp.MinimalExample.WinForms
                 {
                     fetchResult.Status.Exception = e;
                 }
-                json = JsonConvert.SerializeObject(fetchResult,
-                    new JsonSerializerSettings
-                    {
-                        ContractResolver = new CamelCasePropertyNamesContractResolver()
-                    });
+                json = JsonConvert.SerializeObject(fetchResult,camelSettings);
 
                 return json;
             }
