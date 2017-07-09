@@ -19,7 +19,7 @@ namespace CefSharp.MinimalExample.WinForms.Commands
     internal class Download
     {
         [CommandAction]
-        public dynamic Records()
+        public dynamic GetRecords()
         {
             var result =  Global.DownloadRepository.Records;
             var dynamic = new RecordContainer {Records = result}.ToDynamic();
@@ -27,25 +27,25 @@ namespace CefSharp.MinimalExample.WinForms.Commands
         }
 
         [CommandAction]
-        public void InitDownload([CommandParameter(FromBody = true)]DownloadRecord paramOne)
+        public void PostInitDownload([CommandParameter(FromBody = true)]DownloadRecord body)
         {
-            Global.DownloadRepository.InitDownload(paramOne);
+            Global.DownloadRepository.InitDownload(body);
         }
 
         [CommandAction]
-        public void Cancel([CommandParameter(FromBody = true)]DownloadRecord paramOne)
+        public void PostCancel([CommandParameter(FromBody = true)]DownloadRecord body)
         {
-            Global.DownloadRepository.Cancel(paramOne.Url);
+            Global.DownloadRepository.Cancel(body.Url);
         }
         [CommandAction]
-        public void Remove([CommandParameter(FromBody = true)]DownloadRecord paramOne)
+        public void PostRemove([CommandParameter(FromBody = true)]DownloadRecord body)
         {
-            Global.DownloadRepository.Remove(paramOne.Url);
+            Global.DownloadRepository.Remove(body.Url);
         }
         [CommandAction]
-        public LaunchResult LaunchExecutable([CommandParameter(FromBody = true)]DownloadRecord paramOne)
+        public LaunchResult PostLaunchExecutable([CommandParameter(FromBody = true)]DownloadRecord body)
         {
-            return Global.DownloadRepository.LaunchExecutable(paramOne.Url);
+            return Global.DownloadRepository.LaunchExecutable(body.Url);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using Newtonsoft.Json;
@@ -8,6 +9,13 @@ using Synoptic;
 
 namespace CefSharp.MinimalExample.WinForms
 {
+    public class FetchInit
+    {
+        public string Method { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
+        public dynamic Body { get; set; }
+    }
+
     public class ComplexData
     {
         public string SomeString { get; set; }
@@ -28,7 +36,7 @@ namespace CefSharp.MinimalExample.WinForms
     internal class MyCommand
     {
         [CommandAction]
-        public ComplexData MyAction([CommandParameter(FromBody = true)]ComplexData paramOne)
+        public ComplexData GetMyAction([CommandParameter(FromBody = true)]ComplexData body)
         {
             return new ComplexData()
             {
@@ -70,10 +78,41 @@ namespace CefSharp.MinimalExample.WinForms
             {
             }
 
-            public string Fetch(string url, string body)
+            public string Fetch(string url, string init)
             {
+                var camelSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                };
+
+                var fetchInit = JsonConvert.DeserializeObject<FetchInit>(init);
+                var body = fetchInit.Body;
+                var jsonBody = JsonConvert.SerializeObject((object)body, camelSettings);
+
+                var preAction = "";
+
+                switch (fetchInit.Method)
+                {
+                    case "GET":
+                        preAction = "get-";
+                        break;
+                    case "PUT":
+                        preAction = "put-";
+                        break;
+                    case "POST":
+                        preAction = "post-";
+                        break;
+                    case "DELETE":
+                        preAction = "delete-";
+                        break;
+
+                }
+                if (string.IsNullOrEmpty(preAction))
+                {
+                    throw new Exception($"Init.Method:[{fetchInit.Method}] is wrong");
+                }
                 var uri = new Uri(url);
-                var actionName = uri.AbsolutePath.Substring(1);
+                var actionName = preAction + uri.AbsolutePath.Substring(1);
                 var commandName = uri.Host;
                 var fetchResult = new FetchResult()
                 {
@@ -87,7 +126,7 @@ namespace CefSharp.MinimalExample.WinForms
                     {
                         commandName,
                         actionName,
-                        string.Format(@"--param-one={0}", body)
+                        string.Format(@"--body={0}", jsonBody)
                     });
                     fetchResult.Status.Ok = true;
                     if (runResult.Json != null)

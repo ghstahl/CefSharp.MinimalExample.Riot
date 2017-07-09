@@ -235,7 +235,14 @@ var DownloadManagerStore = function (_window$P7HostCore$St) {
       var url = 'local://download/init-download';
 
       data.forEach(function (element) {
-        riot.control.trigger(riot.EVT.fetchStore.in.fetch, url, element, null);
+        riot.control.trigger(riot.EVT.fetchStore.in.fetch, url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Symc-Fetch-App-Version': '1.0'
+          },
+          body: element
+        }, null);
       });
 
       this.trigger(Constants.WELLKNOWN_EVENTS.out.downloadManagerChanged);
@@ -251,7 +258,14 @@ var DownloadManagerStore = function (_window$P7HostCore$St) {
       evt: Constants.WELLKNOWN_EVENTS.in.downloadManagerLocalFetchResult
     };
 
-    riot.control.trigger(riot.EVT.fetchStore.in.fetch, url, null, myAck);
+    riot.control.trigger(riot.EVT.fetchStore.in.fetch, url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Symc-Fetch-App-Version': '1.0'
+      },
+      body: {}
+    }, myAck);
   };
 
   DownloadManagerStore.prototype._onDownloadManagerLocalFetchResult = function _onDownloadManagerLocalFetchResult(result, ack) {
@@ -414,11 +428,25 @@ riot.tag2('download-manager-home', '<div class="panel panel-default"> <div class
 
   self.onInstall = function (evt) {
     var url = 'local://download/launch-executable';
-    riot.control.trigger(riot.EVT.fetchStore.in.fetch, url, { url: evt.item.url }, null);
+    riot.control.trigger(riot.EVT.fetchStore.in.fetch, url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Symc-Fetch-App-Version': '1.0'
+      },
+      body: { url: evt.item.url }
+    }, null);
   };
   self.onCancel = function (evt) {
-    var url = 'local://download/Cancel';
-    riot.control.trigger(riot.EVT.fetchStore.in.fetch, url, { url: evt.item.url }, null);
+    var url = 'local://download/cancel';
+    riot.control.trigger(riot.EVT.fetchStore.in.fetch, url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Symc-Fetch-App-Version': '1.0'
+      },
+      body: { url: evt.item.url }
+    }, null);
   };
 });
 

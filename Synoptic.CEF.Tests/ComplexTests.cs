@@ -1,18 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
 namespace Synoptic.CEF.Tests
 {
+    public class FetchInit
+    {
+        public string Method { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
+        public dynamic Body { get; set; }
+    }
+
     public class ComplexData
     {
         public string SomeString { get; set; }
         public int SomeInt { get; set; }
     }
+
     [Command]
     internal class CommandRunnerTestClass
     {
@@ -35,6 +45,7 @@ namespace Synoptic.CEF.Tests
         {
             Dump(paramOne, paramTwo, paramThree);
         }
+
         [CommandAction]
         public ComplexData MultipleParamsToHyphenWithReturn(string paramOne, string paramTwo, string paramThree)
         {
@@ -45,8 +56,9 @@ namespace Synoptic.CEF.Tests
                 SomeString = "Hello"
             };
         }
+
         [CommandAction]
-        public ComplexData ComplexParamToHyphenWithReturn([CommandParameter(FromBody = true)]ComplexData paramOne)
+        public ComplexData ComplexParamToHyphenWithReturn([CommandParameter(FromBody = true)] ComplexData paramOne)
         {
             Dump(paramOne);
             return new ComplexData()
@@ -55,6 +67,7 @@ namespace Synoptic.CEF.Tests
                 SomeString = "Hello"
             };
         }
+
         private void Dump(params object[] args)
         {
             var stackTrace = new StackTrace();
@@ -78,26 +91,39 @@ namespace Synoptic.CEF.Tests
             }
         }
     }
+
     [TestClass]
     public class ComplexTests
     {
         [TestMethod]
         public void TestMethod1()
         {
-           var json = JsonConvert.SerializeObject(
+            var camelSettings = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
 
-                new ComplexData() {SomeInt = 42,SomeString = "Hello Cat"},
-                new JsonSerializerSettings
-                {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver()
-                });
+            var fetchInit = new FetchInit() {Headers = new Dictionary<string, string>(), Method = "Get"};
+
+            var json = JsonConvert.SerializeObject(
+
+                new ComplexData() {SomeInt = 42, SomeString = "Hello Cat"},
+                camelSettings);
+            fetchInit.Body = JObject.Parse(json);
+            var jsonFetchInit = JsonConvert.SerializeObject(fetchInit,camelSettings);
+
+            var fetchInit2 = JsonConvert.DeserializeObject< FetchInit>(jsonFetchInit);
+            var jsonFetchInit2 = JsonConvert.SerializeObject(fetchInit2, camelSettings);
+
+            var body = fetchInit2.Body;
+            var jsonBody = JsonConvert.SerializeObject((object)body, camelSettings);
 
 
             var runResult = new CommandRunner().Run(new[]
             {
                 "command-runner-test-class",
                 "complex-param-to-hyphen-with-return",
-                string.Format(@"--param-one={0}",json)
+                string.Format(@"--param-one={0}", json)
             });
 
             runResult = new CommandRunner().WithCommandFromType<CommandRunnerTestClass>().Run(new[]

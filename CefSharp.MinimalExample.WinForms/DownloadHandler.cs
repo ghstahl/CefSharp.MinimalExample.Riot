@@ -11,7 +11,7 @@ namespace CefSharp.MinimalExample.WinForms
     {
         public DownloadHandler()
         {
-            
+
         }
 
         public event EventHandler<DownloadItem> OnBeforeDownloadFired;
@@ -52,9 +52,14 @@ namespace CefSharp.MinimalExample.WinForms
 
         public void OnDownloadUpdated(IBrowser browser, DownloadItem downloadItem, IDownloadItemCallback callback)
         {
-            Global.DownloadRepository.UpdateDownload(downloadItem.Url, downloadItem);
             var dr = Global.DownloadRepository.GetDownloadRecord(downloadItem.Url);
-
+            if (dr.DownloadItem.Id != downloadItem.Id)
+            {
+                // this missmatch seems to happen when I cancelled this download in a previous step.
+                // ignor it.
+                return;
+            }
+            Global.DownloadRepository.UpdateDownload(downloadItem.Url, downloadItem);
 
             if (downloadItem.PercentComplete != 100 && dr.IsCancelled && downloadItem.IsInProgress)
             {

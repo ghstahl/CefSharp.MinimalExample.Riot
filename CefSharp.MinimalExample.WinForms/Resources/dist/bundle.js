@@ -7398,15 +7398,29 @@ var NextConfigStore = function (_StoreBase) {
     };
 
     riot.control.trigger(riot.EVT.fetchStore.in.fetch, 'local://my-command/my-action', {
-      someString: 'Hello from riot',
-      someInt: 41
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Symc-Fetch-App-Version': '1.0'
+      },
+      body: {
+        someString: 'Hello from riot',
+        someInt: 41
+      }
     }, myAck2);
 
     var myAck3 = {
       evt: riot.EVT.nextConfigStore.in.downloadRecordsResult
     };
 
-    riot.control.trigger(riot.EVT.fetchStore.in.fetch, 'local://download/records', null, myAck3);
+    riot.control.trigger(riot.EVT.fetchStore.in.fetch, 'local://download/records', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Symc-Fetch-App-Version': '1.0'
+      },
+      body: {}
+    }, myAck3);
   };
 
   NextConfigStore.prototype._onFetchConfigResult = function _onFetchConfigResult(result, ack) {
