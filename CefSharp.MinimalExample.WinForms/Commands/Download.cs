@@ -10,9 +10,13 @@ using Synoptic;
 
 namespace CefSharp.MinimalExample.WinForms.Commands
 {
-    class RecordContainer
+    class ItemsContainer<T>
     {
-        public List<DownloadRecord> Records { get; set; }
+        public ItemsContainer(List<T> items)
+        {
+            Items = items;
+        }
+        public List<T> Items { get; set; }
     }
 
     [Command]
@@ -22,7 +26,7 @@ namespace CefSharp.MinimalExample.WinForms.Commands
         public dynamic GetRecords()
         {
             var result =  Global.DownloadRepository.Records;
-            var dynamic = new RecordContainer {Records = result}.ToDynamic();
+            var dynamic = new ItemsContainer<DownloadRecord>(result).ToDynamic();
             return dynamic;
         }
 
