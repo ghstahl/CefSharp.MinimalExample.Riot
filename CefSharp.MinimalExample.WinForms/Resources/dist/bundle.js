@@ -4580,7 +4580,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
             url += frontPath;
             url += input;
 
-            window.boundAsync.fetchLocal(url).then(function (data) {
+            window.boundAsync.fetchLocalFolder(url).then(function (data) {
               result.json = JSON.parse(data);
               console.log(result.json);
               result.error = null;

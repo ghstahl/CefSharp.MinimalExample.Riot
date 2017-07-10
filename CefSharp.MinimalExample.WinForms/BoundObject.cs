@@ -143,7 +143,7 @@ namespace CefSharp.MinimalExample.WinForms
                 return json;
             }
 
-            public string FetchLocal(string url)
+            public string FetchLocalFolder(string url)
             {
                 if (BoundObject.SchemeName != null )
                 {
