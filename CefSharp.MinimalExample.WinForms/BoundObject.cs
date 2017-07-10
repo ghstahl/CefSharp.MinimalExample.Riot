@@ -26,11 +26,16 @@ namespace CefSharp.MinimalExample.WinForms
         public bool Ok { get; set; }
         public Exception Exception { get; set; }
     }
-    public class FetchResult
+    public class FetchResponse
     {
-
-        public Status Status { get; set; }
-        public dynamic Data { get; set; }
+        public bool Ok { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
+        public int Status { get; set; }
+        public string StatusText { get; set; }
+        public dynamic Json { get; set; }
+        public string Type { get; set; }
+        public string Url { get; set; }
+        public bool UseFinalURL { get; set; }
     }
     [Command]
     internal class MyCommand
@@ -114,10 +119,16 @@ namespace CefSharp.MinimalExample.WinForms
                 var uri = new Uri(url);
                 var actionName = preAction + uri.AbsolutePath.Substring(1);
                 var commandName = uri.Host;
-                var fetchResult = new FetchResult()
+                var fetchResponse = new FetchResponse()
                 {
-                    Status = new Status() {Ok = false},
-                    Data = null
+                    Ok = false,
+                    Status = 404,
+                    Url = url,
+                    UseFinalURL = true,
+                    StatusText = "404",
+                    Type = "basic",
+                    Headers = fetchInit.Headers,
+                    Json = null
                 };
                 string json = "";
                 try
@@ -128,17 +139,23 @@ namespace CefSharp.MinimalExample.WinForms
                         actionName,
                         string.Format(@"--body={0}", jsonBody)
                     });
-                    fetchResult.Status.Ok = true;
                     if (runResult.Json != null)
                     {
-                        fetchResult.Data = JObject.Parse(runResult.Json);
+                        fetchResponse.Json = JObject.Parse(runResult.Json);
                     }
+                    fetchResponse.Ok = true;
+                    fetchResponse.Status = 200;
+                    fetchResponse.StatusText = "OK";
+                   
                 }
                 catch (Exception e)
                 {
-                    fetchResult.Status.Exception = e;
+                    fetchResponse.Json = null;
+                    fetchResponse.Ok = false;
+                    fetchResponse.Status = 404;
+                    fetchResponse.StatusText= e.Message;
                 }
-                json = JsonConvert.SerializeObject(fetchResult,camelSettings);
+                json = JsonConvert.SerializeObject(fetchResponse, camelSettings);
 
                 return json;
             }
