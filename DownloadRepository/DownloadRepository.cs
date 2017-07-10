@@ -190,8 +190,15 @@ namespace CEF.Custom
                 var dRecords = new BiggyList<DownloadRecord>(JsonStore);
                 foreach (var item in dRecords)
                 {
-                    if (item.DownloadItem.IsComplete)
+                    if (item.DownloadItem == null)
+                    {
                         continue;
+                    }
+                    if (item.DownloadItem.IsComplete)
+                    {
+                        continue;
+                    }
+                        
                     if (item.DownloadItem.IsInProgress)
                     {
                         File.Delete(item.DownloadItem.FullPath);
