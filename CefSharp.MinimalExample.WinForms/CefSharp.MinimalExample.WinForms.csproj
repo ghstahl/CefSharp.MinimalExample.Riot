@@ -236,6 +236,10 @@
       <Project>{01415ef2-645b-4547-b551-7ec5340ffea7}</Project>
       <Name>DownloadRepository</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Programs.Repository\Programs.Repository.csproj">
+      <Project>{9a6e1c79-55c3-4c5d-a022-14e5b6fb6786}</Project>
+      <Name>Programs.Repository</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Synopitc.CEF\Synopitc.CEF.csproj">
       <Project>{0bb05266-c70f-484f-8f14-1bf46f051bc3}</Project>
       <Name>Synopitc.CEF</Name>
