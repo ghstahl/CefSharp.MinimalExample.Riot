@@ -98,6 +98,9 @@ namespace CefSharp.MinimalExample.WinForms
 
                 switch (fetchInit.Method)
                 {
+                    case "HEAD":
+                        preAction = "head-";
+                        break;
                     case "GET":
                         preAction = "get-";
                         break;
