@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -10,24 +9,16 @@ using Synoptic;
 
 namespace CefSharp.MinimalExample.WinForms.Commands
 {
-    class ItemsContainer<T>
-    {
-        public ItemsContainer(List<T> items)
-        {
-            Items = items;
-        }
-        public List<T> Items { get; set; }
-    }
-
     [Command]
     internal class Download
     {
         [CommandAction]
-        public dynamic GetRecords()
+        public DownloadRecord[] GetRecords()
         {
             var result =  Global.DownloadRepository.Records;
-            var dynamic = new ItemsContainer<DownloadRecord>(result).ToDynamic();
-            return dynamic;
+            return result.ToArray();
+        //    var dynamic = new ItemsContainer<DownloadRecord>(result).ToDynamic();
+        //    return dynamic;
         }
 
         [CommandAction]

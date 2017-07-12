@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using CEF.Custom;
+using Programs.Repository;
 
 namespace CefSharp.MinimalExample.WinForms
 {
@@ -49,6 +50,7 @@ namespace CefSharp.MinimalExample.WinForms
 
             //Perform dependency check to make sure all relevant resources are in our output directory.
             Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
+            Global.ProgramsRepository = new ProgramsRepository();
             Global.DownloadRepository = new DownloadRepository();
             Global.DownloadRepository.PurgeIncompletes();
             var browser = new BrowserForm();

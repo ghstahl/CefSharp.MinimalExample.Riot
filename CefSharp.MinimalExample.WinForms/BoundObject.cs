@@ -144,7 +144,17 @@ namespace CefSharp.MinimalExample.WinForms
                     });
                     if (runResult.Json != null)
                     {
-                        fetchResponse.Json = JObject.Parse(runResult.Json);
+                        runResult.Json = runResult.Json.Trim();
+                        if (runResult.Json.StartsWith("["))
+                        {
+                            fetchResponse.Json = JArray.Parse(runResult.Json);
+                        }
+                        else
+                        {
+                            fetchResponse.Json = JObject.Parse(runResult.Json);
+                        }
+
+                        
                     }
                     fetchResponse.Ok = true;
                     fetchResponse.Status = 200;
