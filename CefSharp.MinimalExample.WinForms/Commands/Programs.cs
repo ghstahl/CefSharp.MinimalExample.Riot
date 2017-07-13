@@ -65,7 +65,7 @@ namespace CefSharp.MinimalExample.WinForms.Commands
             return result;
         }
         [CommandAction]
-        public InstalledApp[] GetPage([CommandParameter(FromBody = true)]PageQuery body)
+        public ProcessApp[] GetPage([CommandParameter(FromBody = true)]PageQuery body)
         {
             var result = Global.ProgramsRepository.PageProcess(body.Offset, body.Count);
             return result;
