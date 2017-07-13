@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,9 +9,16 @@ namespace Programs.Repository
 {
     public interface IProgramsRepository
     {
-        void Load();
-        InstalledApp[] Page(int offset, int count);
-        int Count { get; }
+        void LoadInstall(bool soft = false);
+        void LoadProcesses(bool soft = false);
+        InstalledApp[] PageInstalled(int offset, int count);
+        int InstallCount { get; }
         bool IsInstalled(string displayName);
+        int ProcessCount { get; }
+
+        Process[] PageProcess(int offset, int count);
+        bool IsRunning(string processName);
     }
 }
+
+

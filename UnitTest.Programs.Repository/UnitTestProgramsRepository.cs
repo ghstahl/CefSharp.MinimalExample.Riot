@@ -8,14 +8,14 @@ namespace UnitTest.Programs.Repository
     public class UnitTestProgramsRepository
     {
         [TestMethod]
-        public void Test_GetRecords()
+        public void Test_GetInstallRecords()
         {
             IProgramsRepository programsRepo = new ProgramsRepository();
-            programsRepo.Load();
-            var count = programsRepo.Count;
+            programsRepo.LoadInstall();
+            var count = programsRepo.InstallCount;
             Assert.IsTrue(count > 1);
 
-            var records = programsRepo.Page(0, count+10);
+            var records = programsRepo.PageInstalled(0, count+10);
             Assert.IsNotNull(records);
             Assert.AreEqual(records.Length,count);
         }
@@ -24,11 +24,36 @@ namespace UnitTest.Programs.Repository
         public void Test_IsInstalled()
         {
             IProgramsRepository programsRepo = new ProgramsRepository();
-            programsRepo.Load();
-            var count = programsRepo.Count;
+            programsRepo.LoadInstall();
+            var count = programsRepo.InstallCount;
             Assert.IsTrue(count > 1);
             var installed = programsRepo.IsInstalled("Norton Internet Security");
             Assert.IsTrue(installed);
+
+        }
+        [TestMethod]
+        public void Test_GetProcesseRecords()
+        {
+            IProgramsRepository programsRepo = new ProgramsRepository();
+            programsRepo.LoadProcesses();
+            var count = programsRepo.ProcessCount;
+            Assert.IsTrue(count > 1);
+
+            var records = programsRepo.PageProcess(0, count + 10);
+            Assert.IsNotNull(records);
+            Assert.AreEqual(records.Length, count);
+
+        }
+        [TestMethod]
+        public void Test_IsRunning()
+        {
+            IProgramsRepository programsRepo = new ProgramsRepository();
+            programsRepo.LoadProcesses();
+            var count = programsRepo.ProcessCount;
+            Assert.IsTrue(count > 1);
+
+            var running = programsRepo.IsRunning("nis");
+            Assert.IsTrue(running);
 
         }
     }

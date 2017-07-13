@@ -20,12 +20,12 @@ namespace CefSharp.MinimalExample.WinForms.Commands
         [CommandAction]
         public void PostLoad()
         {
-            Global.ProgramsRepository.Load();
+            Global.ProgramsRepository.LoadInstall();
         }
         [CommandAction]
         public int GetCount()
         {
-            var result = Global.ProgramsRepository.Count;
+            var result = Global.ProgramsRepository.ProcessCount;
             return result;
         }
         [CommandAction]
@@ -37,7 +37,7 @@ namespace CefSharp.MinimalExample.WinForms.Commands
         [CommandAction]
         public InstalledApp[] GetPage([CommandParameter(FromBody = true)]PageQuery body)
         {
-            var result = Global.ProgramsRepository.Page(body.Offset,body.Count);
+            var result = Global.ProgramsRepository.PageInstalled(body.Offset,body.Count);
             return result;
         }
 
