@@ -65,11 +65,14 @@ namespace Programs.Repository
             }
         }
 
-        public Process[] PageProcess(int offset, int count)
+        public ProcessApp[] PageProcess(int offset, int count)
         {
             LoadProcesses(true);
             var newArray = _processlist.Skip(offset).Take(count).ToArray();
-            return newArray;
+            var query = from item in newArray
+                        let s = new ProcessApp(item)
+                select s;
+            return query.ToArray();
         }
 
         public bool IsRunning(string processName)

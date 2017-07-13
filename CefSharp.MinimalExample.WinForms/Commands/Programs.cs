@@ -12,7 +12,10 @@ namespace CefSharp.MinimalExample.WinForms.Commands
     class IsInstalledQuery
     {
         public string DisplayName { get; set; }
-       
+    }
+    class IsRunningQuery
+    {
+        public string ProcessName { get; set; }
     }
     [Command]
     internal class Programs
@@ -25,7 +28,7 @@ namespace CefSharp.MinimalExample.WinForms.Commands
         [CommandAction]
         public int GetCount()
         {
-            var result = Global.ProgramsRepository.ProcessCount;
+            var result = Global.ProgramsRepository.InstallCount;
             return result;
         }
         [CommandAction]
@@ -40,6 +43,32 @@ namespace CefSharp.MinimalExample.WinForms.Commands
             var result = Global.ProgramsRepository.PageInstalled(body.Offset,body.Count);
             return result;
         }
-
+    }
+    [Command]
+    internal class Processes
+    {
+        [CommandAction]
+        public void PostLoad()
+        {
+            Global.ProgramsRepository.LoadProcesses();
+        }
+        [CommandAction]
+        public int GetCount()
+        {
+            var result = Global.ProgramsRepository.ProcessCount;
+            return result;
+        }
+        [CommandAction]
+        public bool GetIsRunning([CommandParameter(FromBody = true)]IsRunningQuery body)
+        {
+            var result = Global.ProgramsRepository.IsRunning(body.ProcessName);
+            return result;
+        }
+        [CommandAction]
+        public InstalledApp[] GetPage([CommandParameter(FromBody = true)]PageQuery body)
+        {
+            var result = Global.ProgramsRepository.PageProcess(body.Offset, body.Count);
+            return result;
+        }
     }
 }
