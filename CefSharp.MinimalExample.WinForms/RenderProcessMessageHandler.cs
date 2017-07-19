@@ -14,7 +14,7 @@ namespace CefSharp.MinimalExample.WinForms
         void IRenderProcessMessageHandler.OnContextCreated(IWebBrowser browserControl, IBrowser browser, IFrame frame)
         {
             const string script = "document.addEventListener('DOMContentLoaded', function(){ " +
-                                  "alert('DomLoaded'); " +
+                                 
                                   "window.riot.control.trigger(window.riot.EVT.routeStore.in.routeDispatch, '/main/projects'); " +
                                   
                                   "});";
