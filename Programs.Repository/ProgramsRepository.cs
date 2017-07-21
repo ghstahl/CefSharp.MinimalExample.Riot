@@ -115,7 +115,15 @@ namespace Programs.Repository
             }
         }
 
-
+        public LaunchUrlResult LaunchUrl(string url)
+        {
+            var process = System.Diagnostics.Process.Start(url);
+            return new LaunchUrlResult()
+            {
+                Ok = process != null,
+                Message = (process == null)? string.Format("could not launch url:[{0}]",url):null
+            };
+        }
     }
 }
 

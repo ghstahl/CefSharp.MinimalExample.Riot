@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace Programs.Repository
 {
+    public class LaunchUrlResult
+    {
+        public bool Ok { get; set; }
+        public string Message { get; set; }
+    }
+
     public interface IProgramsRepository
     {
         void LoadInstall(bool soft = false);
@@ -15,7 +21,7 @@ namespace Programs.Repository
         int InstallCount { get; }
         bool IsInstalled(string displayName);
         int ProcessCount { get; }
-
+        LaunchUrlResult LaunchUrl(string url);
         ProcessApp[] PageProcess(int offset, int count);
         bool IsRunning(string processName);
     }

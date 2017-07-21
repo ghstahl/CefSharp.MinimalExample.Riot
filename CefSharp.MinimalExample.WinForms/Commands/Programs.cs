@@ -9,14 +9,22 @@ namespace CefSharp.MinimalExample.WinForms.Commands
         public int Offset { get; set; }
         public int Count { get; set; }
     }
+
+    class LaunchUrlQuery
+    {
+        public string Url { get; set; }
+    }
+
     class IsInstalledQuery
     {
         public string DisplayName { get; set; }
     }
+
     class IsRunningQuery
     {
         public string ProcessName { get; set; }
     }
+
     [Command]
     internal class Programs
     {
@@ -42,6 +50,11 @@ namespace CefSharp.MinimalExample.WinForms.Commands
         {
             var result = Global.ProgramsRepository.PageInstalled(body.Offset,body.Count);
             return result;
+        }
+        [CommandAction]
+        public LaunchUrlResult PostLaunchUrl([CommandParameter(FromBody = true)]LaunchUrlQuery body)
+        {
+            return Global.ProgramsRepository.LaunchUrl(body.Url);
         }
     }
     [Command]
