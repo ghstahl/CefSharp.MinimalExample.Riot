@@ -24,6 +24,7 @@ namespace Programs.Repository
         LaunchUrlResult LaunchUrl(string url);
         ProcessApp[] PageProcess(int offset, int count);
         bool IsRunning(string processName);
+        LaunchUrlResult LaunchSpecial(LaunchSpecialQuery query);
     }
 }
 

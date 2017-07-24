@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -122,6 +123,30 @@ namespace Programs.Repository
             {
                 Ok = process != null,
                 Message = (process == null)? string.Format("could not launch url:[{0}]",url):null
+            };
+        }
+        public LaunchUrlResult LaunchSpecial(LaunchSpecialQuery query)
+        {
+            string root;
+            switch (query.Special)
+            {
+                case "CommonApplicationData":
+                    root = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+                    break;
+                default:
+                    return new LaunchUrlResult() {Ok = false, Message = string.Format("Special:[{0}],is not known.", query.Special) };
+                    break;
+            }
+            var launchPath = Path.Combine(root, query.SubPath);
+
+            Process proc = new Process();
+            proc.StartInfo.FileName = launchPath;
+            var ok = proc.Start();
+
+            return new LaunchUrlResult()
+            {
+                Ok = ok,
+                Message = (!ok) ? string.Format("could not launch special:[{0},{1}]", query.Special, query.SubPath) : null
             };
         }
     }

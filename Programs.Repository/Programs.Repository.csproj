@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InstalledApp.cs" />
+    <Compile Include="LaunchSpecialQuery.cs" />
     <Compile Include="ProcessApp.cs" />
     <Compile Include="ProgramsRepository.cs" />
     <Compile Include="IProgramsRepository.cs" />

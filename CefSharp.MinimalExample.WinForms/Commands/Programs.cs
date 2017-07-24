@@ -56,6 +56,12 @@ namespace CefSharp.MinimalExample.WinForms.Commands
         {
             return Global.ProgramsRepository.LaunchUrl(body.Url);
         }
+        [CommandAction]
+        public LaunchUrlResult PostLaunchSpecial([CommandParameter(FromBody = true)]LaunchSpecialQuery body)
+        {
+            return Global.ProgramsRepository.LaunchSpecial(body);
+        }
+
     }
     [Command]
     internal class Processes
