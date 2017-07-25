@@ -155,30 +155,42 @@ namespace CEF.Custom
 
         public LaunchResult LaunchExecutable(string url)
         {
-            lock (JsonStore)
+            try
             {
-                var dr = GetDownloadRecord(url);
-                if (dr != null && dr.DownloadItem.IsComplete)
+                lock (JsonStore)
                 {
-                    Process process = new Process
+                    var dr = GetDownloadRecord(url);
+                    if (dr != null && dr.DownloadItem.IsComplete)
                     {
-                        StartInfo =
+                        Process process = new Process
                         {
-                            FileName = dr.DownloadItem.FullPath
-                        }
-                    };
-                    var runResult = process.Start();
+                            StartInfo =
+                            {
+                                FileName = dr.DownloadItem.FullPath
+                            }
+                        };
+                        var runResult = process.Start();
+                        return new LaunchResult()
+                        {
+                            Ok = runResult
+                        };
+                    }
                     return new LaunchResult()
                     {
-                        Ok = runResult
+                        Ok = false,
+                        Message = "Doesn't exist"
                     };
+
                 }
+            }
+            catch (Exception e)
+            {
+
                 return new LaunchResult()
                 {
                     Ok = false,
-                    Message = "Doesn't exist"
+                    Message = e.Message
                 };
-
             }
         }
 

@@ -12,6 +12,11 @@ namespace Programs.Repository
         public bool Ok { get; set; }
         public string Message { get; set; }
     }
+    public class LaunchResult
+    {
+        public bool Ok { get; set; }
+        public string Message { get; set; }
+    }
 
     public interface IProgramsRepository
     {
@@ -24,7 +29,7 @@ namespace Programs.Repository
         LaunchUrlResult LaunchUrl(string url);
         ProcessApp[] PageProcess(int offset, int count);
         bool IsRunning(string processName);
-        LaunchUrlResult LaunchSpecial(LaunchSpecialQuery query);
+        LaunchResult LaunchSpecial(LaunchSpecialQuery query);
     }
 }
 

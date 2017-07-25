@@ -36,6 +36,7 @@ namespace Programs.Repository
                 return _records.Count;
             }
         }
+
         public int ProcessCount
         {
             get
@@ -44,6 +45,7 @@ namespace Programs.Repository
                 return _processlist.Length;
             }
         }
+
         public bool IsInstalled(string displayName)
         {
             LoadInstall();
@@ -71,7 +73,7 @@ namespace Programs.Repository
             LoadProcesses(true);
             var newArray = _processlist.Skip(offset).Take(count).ToArray();
             var query = from item in newArray
-                        let s = new ProcessApp(item)
+                let s = new ProcessApp(item)
                 select s;
             return query.ToArray();
         }
@@ -80,8 +82,8 @@ namespace Programs.Repository
         {
             LoadProcesses(false);
             var query = from item in _processlist
-                        where item.ProcessName == processName
-                        select item;
+                where item.ProcessName == processName
+                select item;
             var any = query.Any();
             return any;
         }
@@ -118,36 +120,68 @@ namespace Programs.Repository
 
         public LaunchUrlResult LaunchUrl(string url)
         {
-            var process = System.Diagnostics.Process.Start(url);
-            return new LaunchUrlResult()
+            try
             {
-                Ok = process != null,
-                Message = (process == null)? string.Format("could not launch url:[{0}]",url):null
-            };
-        }
-        public LaunchUrlResult LaunchSpecial(LaunchSpecialQuery query)
-        {
-            string root;
-            switch (query.Special)
-            {
-                case "CommonApplicationData":
-                    root = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-                    break;
-                default:
-                    return new LaunchUrlResult() {Ok = false, Message = string.Format("Special:[{0}],is not known.", query.Special) };
-                    break;
+                var process = System.Diagnostics.Process.Start(url);
+                return new LaunchUrlResult()
+                {
+                    Ok = process != null,
+                    Message = (process == null) ? string.Format("could not launch url:[{0}]", url) : null
+                };
             }
-            var launchPath = Path.Combine(root, query.SubPath);
-
-            Process proc = new Process();
-            proc.StartInfo.FileName = launchPath;
-            var ok = proc.Start();
-
-            return new LaunchUrlResult()
+            catch (Exception e)
             {
-                Ok = ok,
-                Message = (!ok) ? string.Format("could not launch special:[{0},{1}]", query.Special, query.SubPath) : null
-            };
+
+                return new LaunchUrlResult()
+                {
+                    Ok = false,
+                    Message = e.Message
+                };
+            }
+
+        }
+
+        public LaunchResult LaunchSpecial(LaunchSpecialQuery query)
+        {
+            try
+            {
+
+                string root;
+                switch (query.Special)
+                {
+                    case "CommonApplicationData":
+                        root = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+                        break;
+                    default:
+                        return new LaunchResult()
+                        {
+                            Ok = false,
+                            Message = string.Format("Special:[{0}],is not known.", query.Special)
+                        };
+                        
+                }
+                var launchPath = Path.Combine(root, query.SubPath);
+
+                Process proc = new Process();
+                proc.StartInfo.FileName = launchPath;
+                var ok = proc.Start();
+
+                return new LaunchResult()
+                {
+                    Ok = ok,
+                    Message =
+                        (!ok) ? string.Format("could not launch special:[{0},{1}]", query.Special, query.SubPath) : null
+                };
+            }
+            catch (Exception e)
+            {
+
+                return new LaunchResult()
+                {
+                    Ok = false,
+                    Message = e.Message
+                };
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CEF.Custom;
 using Programs.Repository;
 using Synoptic;
+using LaunchResult = Programs.Repository.LaunchResult;
 
 namespace CefSharp.MinimalExample.WinForms.Commands
 {
@@ -57,7 +58,7 @@ namespace CefSharp.MinimalExample.WinForms.Commands
             return Global.ProgramsRepository.LaunchUrl(body.Url);
         }
         [CommandAction]
-        public LaunchUrlResult PostLaunchSpecial([CommandParameter(FromBody = true)]LaunchSpecialQuery body)
+        public LaunchResult PostLaunchSpecial([CommandParameter(FromBody = true)]LaunchSpecialQuery body)
         {
             return Global.ProgramsRepository.LaunchSpecial(body);
         }
