@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Command.Common;
 using Programs.Repository;
 using Synoptic;
 
@@ -18,16 +19,16 @@ namespace ProgramsCommand
             ProgramsRepository.LoadInstall();
         }
         [CommandAction]
-        public int GetCount()
+        public PrimitiveValue<int> GetCount()
         {
             var result = ProgramsRepository.InstallCount;
-            return result;
+            return new PrimitiveValue<int>(result);
         }
         [CommandAction]
-        public IsInstalledResult GetIsInstalled([CommandParameter(FromBody = true)]IsInstalledQuery body)
+        public PrimitiveValue<bool> GetIsInstalled([CommandParameter(FromBody = true)]IsInstalledQuery body)
         {
             var result = ProgramsRepository.IsInstalled(body.DisplayName);
-            return result;
+            return new PrimitiveValue<bool>(result);
         }
         [CommandAction]
         public InstalledApp[] GetPage([CommandParameter(FromBody = true)]PageQuery body)

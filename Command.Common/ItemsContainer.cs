@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace CefSharp.MinimalExample.WinForms.Commands
+namespace Command.Common
 {
-    class ItemsContainer<T>
+    public class ItemsContainer<T>
     {
         public ItemsContainer(List<T> items)
         {
@@ -13,13 +13,5 @@ namespace CefSharp.MinimalExample.WinForms.Commands
             Items = new List<T>(items);
         }
         public List<T> Items { get; set; }
-    }
-    class ItemContainer<T>
-    {
-        public ItemContainer(T item)
-        {
-            Item = item;
-        }
-        public T Item { get; set; }
     }
 }

@@ -58,6 +58,7 @@ namespace CefSharp.MinimalExample.WinForms
             ProgramsCommand.Programs.ProgramsRepository = Global.ProgramsRepository;
             ProgramsCommand.Processes.ProgramsRepository = Global.ProgramsRepository;
             Global.DownloadRepository = new DownloadRepository();
+            DownloadCommand.Download.DownloadRepository = Global.DownloadRepository;
             Global.DownloadRepository.PurgeIncompletes();
             var browser = new BrowserForm();
             Global.DownloadRepository.RegisterSink(new MyDownloadEventSink());

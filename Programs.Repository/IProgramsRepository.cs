@@ -27,7 +27,7 @@ namespace Programs.Repository
         void LoadProcesses(bool soft = false);
         InstalledApp[] PageInstalled(int offset, int count);
         int InstallCount { get; }
-        IsInstalledResult IsInstalled(string displayName);
+        bool IsInstalled(string displayName);
         int ProcessCount { get; }
         LaunchUrlResult LaunchUrl(string url);
         ProcessApp[] PageProcess(int offset, int count);

@@ -34,7 +34,7 @@ namespace UnitTest.Programs.Repository
             var count = programsRepo.InstallCount;
             Assert.IsTrue(count > 1);
             var result = programsRepo.IsInstalled("Norton Internet Security");
-            Assert.IsTrue(result.IsInstalled);
+            Assert.IsTrue(result);
 
         }
         [TestMethod]
@@ -84,7 +84,7 @@ namespace UnitTest.Programs.Repository
 
             var response = new BoundFetch().Fetch(url, jsonFetchInit);
             dynamic isInstalledResponse = JObject.Parse(response);
-            bool b = isInstalledResponse.json.isInstalled;
+            bool b = isInstalledResponse.json.value;
             Assert.IsTrue(b);
         }
     }

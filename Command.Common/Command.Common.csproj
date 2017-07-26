@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6F2EEF08-E691-48B5-AADB-12C130A17A4D}</ProjectGuid>
+    <ProjectGuid>{72048323-2EB6-4701-9BAF-A489B7671191}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ProgramsCommand</RootNamespace>
-    <AssemblyName>ProgramsCommand</AssemblyName>
+    <RootNamespace>Command.Common</RootNamespace>
+    <AssemblyName>Command.Common</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -77,27 +77,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IsInstalledQuery.cs" />
-    <Compile Include="IsRunningQuery.cs" />
-    <Compile Include="LaunchUrlQuery.cs" />
-    <Compile Include="PageQuery.cs" />
-    <Compile Include="Processes.cs" />
-    <Compile Include="Programs.cs" />
+    <Compile Include="DynamicExtensions.cs" />
+    <Compile Include="ItemContainer.cs" />
+    <Compile Include="ItemsContainer.cs" />
+    <Compile Include="PrimitiveValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Command.Common\Command.Common.csproj">
-      <Project>{72048323-2eb6-4701-9baf-a489b7671191}</Project>
-      <Name>Command.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Programs.Repository\Programs.Repository.csproj">
-      <Project>{9A6E1C79-55C3-4C5D-A022-14E5B6FB6786}</Project>
-      <Name>Programs.Repository</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Synopitc.CEF\Synopitc.CEF.csproj">
-      <Project>{0BB05266-C70F-484F-8F14-1BF46F051BC3}</Project>
-      <Name>Synopitc.CEF</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

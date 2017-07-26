@@ -74,9 +74,6 @@
       <DependentUpon>BrowserForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CefSharpSchemeHandlerFactory.cs" />
-    <Compile Include="Commands\Download.cs" />
-    <Compile Include="Commands\DynamicExtensions.cs" />
-    <Compile Include="Commands\ItemsContainer.cs" />
     <Compile Include="Controls\ControlExtensions.cs" />
     <Compile Include="DownloadHandler.cs" />
     <Compile Include="Global.cs" />
@@ -233,6 +230,14 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Command.Common\Command.Common.csproj">
+      <Project>{72048323-2eb6-4701-9baf-a489b7671191}</Project>
+      <Name>Command.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DownloadCommand\DownloadCommand.csproj">
+      <Project>{d0fc3b45-8a87-4391-8c49-c5b071bb8689}</Project>
+      <Name>DownloadCommand</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DownloadRepository\DownloadRepository.csproj">
       <Project>{01415ef2-645b-4547-b551-7ec5340ffea7}</Project>
       <Name>DownloadRepository</Name>
@@ -254,7 +259,9 @@
       <Name>Synopitc.CEF</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Commands\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\cef.redist.x86.3.2987.1601\build\cef.redist.x86.targets" Condition="Exists('..\packages\cef.redist.x86.3.2987.1601\build\cef.redist.x86.targets')" />
   <Import Project="..\packages\cef.redist.x64.3.2987.1601\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2987.1601\build\cef.redist.x64.targets')" />

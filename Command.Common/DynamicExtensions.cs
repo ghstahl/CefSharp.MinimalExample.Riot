@@ -1,8 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
 
-namespace CefSharp.MinimalExample.WinForms.Commands
+namespace Command.Common
 {
     public static class DynamicExtensions
     {

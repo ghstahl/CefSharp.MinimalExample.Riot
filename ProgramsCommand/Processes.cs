@@ -1,3 +1,4 @@
+using Command.Common;
 using Programs.Repository;
 using Synoptic;
 
@@ -13,16 +14,16 @@ namespace ProgramsCommand
             ProgramsRepository.LoadProcesses(false);
         }
         [CommandAction]
-        public int GetCount()
+        public PrimitiveValue<int> GetCount()
         {
             var result = ProgramsRepository.ProcessCount;
-            return result;
+            return new PrimitiveValue<int>(result);
         }
         [CommandAction]
-        public bool GetIsRunning([CommandParameter(FromBody = true)]IsRunningQuery body)
+        public PrimitiveValue<bool> GetIsRunning([CommandParameter(FromBody = true)]IsRunningQuery body)
         {
             var result = ProgramsRepository.IsRunning(body.ProcessName);
-            return result;
+            return new PrimitiveValue<bool>(result);
         }
         [CommandAction]
         public ProcessApp[] GetPage([CommandParameter(FromBody = true)]PageQuery body)
