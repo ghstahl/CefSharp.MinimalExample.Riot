@@ -18,6 +18,7 @@ namespace CefSharp.MinimalExample.WinForms
             Global.WebBrowser.GetBrowser().MainFrame.ExecuteJavaScriptAsync(script);
         }
     }
+
     public class Program
     {
         [STAThread]
@@ -54,6 +55,8 @@ namespace CefSharp.MinimalExample.WinForms
             //Perform dependency check to make sure all relevant resources are in our output directory.
             Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
             Global.ProgramsRepository = new ProgramsRepository();
+            ProgramsCommand.Programs.ProgramsRepository = Global.ProgramsRepository;
+            ProgramsCommand.Processes.ProgramsRepository = Global.ProgramsRepository;
             Global.DownloadRepository = new DownloadRepository();
             Global.DownloadRepository.PurgeIncompletes();
             var browser = new BrowserForm();

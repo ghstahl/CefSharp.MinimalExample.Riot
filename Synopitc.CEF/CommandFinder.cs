@@ -7,10 +7,16 @@ namespace Synoptic
 {
     internal class CommandFinder
     {
-        public IEnumerable<Command> FindInAssembly(Assembly assembly)
+        public IEnumerable<Command> FindInAssembly(Assembly[] assemblies)
         {
-            var commandTypes = ReflectionUtilities.RetrieveTypesWithAttribute<CommandAttribute>(assembly);
-            return commandTypes.Select(FindInType);
+            List<Type> commands = new List<Type>();
+            foreach (var assembly in assemblies)
+            {
+                var commandTypes = ReflectionUtilities.RetrieveTypesWithAttribute<CommandAttribute>(assembly);
+                commands.AddRange(commandTypes);
+            }
+          
+            return commands.Select(FindInType);
         }
 
         public Command FindInType(Type type)

@@ -46,14 +46,14 @@ namespace Programs.Repository
             }
         }
 
-        public bool IsInstalled(string displayName)
+        public IsInstalledResult IsInstalled(string displayName)
         {
             LoadInstall();
             var query = from item in _records
                 where item.DisplayName == displayName
                 select item;
             var any = query.Any();
-            return any;
+            return new IsInstalledResult {IsInstalled = any};
 
         }
 

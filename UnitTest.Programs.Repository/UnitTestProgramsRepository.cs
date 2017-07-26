@@ -1,6 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using LocalFetch;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using Programs.Repository;
+using ProgramsCommand;
 
 namespace UnitTest.Programs.Repository
 {
@@ -27,8 +33,8 @@ namespace UnitTest.Programs.Repository
             programsRepo.LoadInstall();
             var count = programsRepo.InstallCount;
             Assert.IsTrue(count > 1);
-            var installed = programsRepo.IsInstalled("Norton Internet Security");
-            Assert.IsTrue(installed);
+            var result = programsRepo.IsInstalled("Norton Internet Security");
+            Assert.IsTrue(result.IsInstalled);
 
         }
         [TestMethod]
@@ -55,6 +61,31 @@ namespace UnitTest.Programs.Repository
             var running = programsRepo.IsRunning("nis");
             Assert.IsTrue(running);
 
+        }
+
+        [TestMethod]
+        public void Test_LocalFetch_is_installed_success()
+        {
+            var url = "local://programs/is-installed";
+            var fetchInit = new FetchInit() { Headers = new Dictionary<string, string>(), Method = "GET" };
+            var camelSettings = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+            var json = JsonConvert.SerializeObject(
+                new IsInstalledQuery() { DisplayName = "Norton Internet Security"},
+                camelSettings);
+            fetchInit.Body = JObject.Parse(json);
+            var jsonFetchInit = JsonConvert.SerializeObject(fetchInit, camelSettings);
+
+            var programsRepository = new ProgramsRepository();
+            ProgramsCommand.Programs.ProgramsRepository = programsRepository;
+            ProgramsCommand.Processes.ProgramsRepository = programsRepository;
+
+            var response = new BoundFetch().Fetch(url, jsonFetchInit);
+            dynamic isInstalledResponse = JObject.Parse(response);
+            bool b = isInstalledResponse.json.isInstalled;
+            Assert.IsTrue(b);
         }
     }
 }

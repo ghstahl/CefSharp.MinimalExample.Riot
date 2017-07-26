@@ -77,7 +77,6 @@
     <Compile Include="Commands\Download.cs" />
     <Compile Include="Commands\DynamicExtensions.cs" />
     <Compile Include="Commands\ItemsContainer.cs" />
-    <Compile Include="Commands\Programs.cs" />
     <Compile Include="Controls\ControlExtensions.cs" />
     <Compile Include="DownloadHandler.cs" />
     <Compile Include="Global.cs" />
@@ -238,9 +237,17 @@
       <Project>{01415ef2-645b-4547-b551-7ec5340ffea7}</Project>
       <Name>DownloadRepository</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LocalFetch\LocalFetch.csproj">
+      <Project>{ae244312-9085-47c8-a00a-f6ae07ccf17e}</Project>
+      <Name>LocalFetch</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Programs.Repository\Programs.Repository.csproj">
       <Project>{9a6e1c79-55c3-4c5d-a022-14e5b6fb6786}</Project>
       <Name>Programs.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ProgramsCommand\ProgramsCommand.csproj">
+      <Project>{6f2eef08-e691-48b5-aadb-12c130a17a4d}</Project>
+      <Name>ProgramsCommand</Name>
     </ProjectReference>
     <ProjectReference Include="..\Synopitc.CEF\Synopitc.CEF.csproj">
       <Project>{0bb05266-c70f-484f-8f14-1bf46f051bc3}</Project>

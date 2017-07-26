@@ -27,8 +27,9 @@ namespace Synoptic
             if (_optionSet != null)
                 arguments = new Queue<string>(_optionSet.Parse(args));
 
+
             if (_availableCommands.Count == 0)
-                WithCommandsFromAssembly(Assembly.GetCallingAssembly());
+                WithCommandsFromAssembly(AppDomain.CurrentDomain.GetAssemblies());
 
             try
             {
@@ -95,9 +96,9 @@ namespace Synoptic
             return this;
         }
 
-        public CommandRunner WithCommandsFromAssembly(Assembly assembly)
+        public CommandRunner WithCommandsFromAssembly(Assembly[] assemblies)
         {
-            _availableCommands.AddRange(_commandFinder.FindInAssembly(assembly));
+            _availableCommands.AddRange(_commandFinder.FindInAssembly(assemblies));
             return this;
         }
 
