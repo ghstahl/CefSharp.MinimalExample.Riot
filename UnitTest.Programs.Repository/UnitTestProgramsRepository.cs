@@ -87,5 +87,29 @@ namespace UnitTest.Programs.Repository
             bool b = isInstalledResponse.json.value;
             Assert.IsTrue(b);
         }
+        [TestMethod]
+        public void Test_LocalFetch_is_running_success()
+        {
+            var url = "local://processes/is-running";
+            var fetchInit = new FetchInit() { Headers = new Dictionary<string, string>(), Method = "GET" };
+            var camelSettings = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+            var json = JsonConvert.SerializeObject(
+                new IsRunningQuery() { ProcessName = "nis" },
+                camelSettings);
+            fetchInit.Body = JObject.Parse(json);
+            var jsonFetchInit = JsonConvert.SerializeObject(fetchInit, camelSettings);
+
+            var programsRepository = new ProgramsRepository();
+            ProgramsCommand.Programs.ProgramsRepository = programsRepository;
+            ProgramsCommand.Processes.ProgramsRepository = programsRepository;
+
+            var response = new BoundFetch().Fetch(url, jsonFetchInit);
+            dynamic isInstalledResponse = JObject.Parse(response);
+            bool b = isInstalledResponse.json.value;
+            Assert.IsTrue(b);
+        }
     }
 }
